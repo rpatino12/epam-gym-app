@@ -1,15 +1,33 @@
 package com.rpatino12.epam.gym.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.util.Date;
 
+@Entity
+@Table(name = "TRAINING")
 public class Training {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "TRAINING_ID")
     private Long trainingId;
+    @Column(name = "TRAINEE_ID")
     private Long traineeId; // (FK)
+    @Column(name = "TRAINER_ID")
     private Long trainerId; // (FK)
+    @Column(name = "TRAINING_NAME")
     private String trainingName;
+    @Column(name = "TRAINING_TYPE_ID")
     private Long trainingTypeId; // (FK)
+    @Column(name = "TRAINING_DATE")
     private Date trainingDate;
-    private Integer trainingDuration;
+    @Column(name = "TRAINING_DURATION")
+    private Double trainingDuration;
 
     public Long getTrainingId() {
         return trainingId;
@@ -59,11 +77,11 @@ public class Training {
         this.trainingDate = trainingDate;
     }
 
-    public Integer getTrainingDuration() {
+    public Double getTrainingDuration() {
         return trainingDuration;
     }
 
-    public void setTrainingDuration(Integer trainingDuration) {
+    public void setTrainingDuration(Double trainingDuration) {
         this.trainingDuration = trainingDuration;
     }
 }

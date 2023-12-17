@@ -1,11 +1,26 @@
 package com.rpatino12.epam.gym.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import java.util.Date;
 
+@Entity
+@Table(name = "TRAINEE")
 public class Trainee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "TRAINEE_ID")
     private Long traineeId;
+    @Column(name = "USER_ID")
     private Long userId; // (FK)
+    @Column(name = "BIRTHDATE")
     private Date dateOfBirth;
+    @Column(name = "ADDRESS")
     private String address;
 
     public Long getTraineeId() {
