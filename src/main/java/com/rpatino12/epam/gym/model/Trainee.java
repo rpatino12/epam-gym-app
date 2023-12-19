@@ -28,7 +28,7 @@ public class Trainee {
     @Column(name = "ADDRESS")
     private String address;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "USER_ID", nullable = false, insertable = false, updatable = false)
     private User user;
 

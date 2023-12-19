@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,6 +25,20 @@ public class User {
     private String password;
     @Column(name = "IS_ACTIVE")
     private Boolean isActive;
+
+    @OneToOne(mappedBy = "user")
+    private Trainee trainee;
+
+    public User() {
+    }
+
+    public User(String firstName, String lastName, String password, Boolean isActive) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = firstName + "." + lastName;
+        this.password = password;
+        this.isActive = isActive;
+    }
 
     public Long getId() {
         return id;

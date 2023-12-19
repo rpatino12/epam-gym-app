@@ -3,6 +3,7 @@ package com.rpatino12.epam.gym.service;
 import com.rpatino12.epam.gym.dao.TraineeDAO;
 import com.rpatino12.epam.gym.dao.UserDAO;
 import com.rpatino12.epam.gym.model.Trainee;
+import com.rpatino12.epam.gym.model.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +22,31 @@ public class TraineeService {
 
     // Trainee Service class should support possibility to create/update/delete/select Trainee profile.
     public Trainee save(Trainee newTrainee){
+        userDAO.save(newTrainee.getUser());
         return traineeDAO.save(newTrainee);
     }
 
     public Trainee update(Trainee newTrainee, Long traineeId) {
-        Optional<Trainee> trainee = select(traineeId);
-        if (trainee.isPresent()){
-            trainee.get().setAddress(newTrainee.getAddress());
-            trainee.get().setDateOfBirth(newTrainee.getDateOfBirth());
-            trainee.get().setUserId(newTrainee.getUserId());
-        }
-        return save(trainee.get());
+        userDAO.findById(newTrainee.getUserId())
+                .map(
+                        user -> {
+                            user.setFirstName(newTrainee.getUser().getFirstName());
+                            user.setLastName(newTrainee.getUser().getLastName());
+                            user.setUsername(newTrainee.getUser().getUsername());
+                            user.setPassword(newTrainee.getUser().getPassword());
+                            user.setActive(newTrainee.getUser().getActive());
+                            return userDAO.save(user);
+                        }
+                );
+        return traineeDAO.findById(traineeId)
+                .map(
+                        trainee -> {
+                            trainee.setDateOfBirth(newTrainee.getDateOfBirth());
+                            trainee.setAddress(newTrainee.getAddress());
+                            trainee.setUser(newTrainee.getUser());
+                            return traineeDAO.save(trainee);
+                        }
+                ).get();
     }
 
     public boolean delete(Long traineeId){
