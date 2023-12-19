@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -18,6 +20,14 @@ public class TraineeToTrainer {
     private Long traineeId; // (FK)
     @Column(name = "TRAINER_ID")
     private Long trainerId; // (FK)
+
+    @ManyToOne
+    @JoinColumn(name = "TRAINEE_ID", insertable = false, updatable = false, nullable = false)
+    private Trainee trainee;
+
+    @ManyToOne
+    @JoinColumn(name = "TRAINER_ID", insertable = false, updatable = false, nullable = false)
+    private Trainer trainer;
 
     public Long getId() {
         return Id;

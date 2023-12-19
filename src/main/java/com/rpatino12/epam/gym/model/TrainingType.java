@@ -5,7 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.util.List;
 
 @Entity
 @Table(name = "TRAINING_TYPE")
@@ -16,6 +19,12 @@ public class TrainingType {
     private Long trainingTypeId;
     @Column(name = "TRAINING_TYPE_NAME")
     private String trainingTypeName;
+
+    @OneToMany(mappedBy = "trainingType")
+    private List<Training> trainings;
+
+    @OneToMany(mappedBy = "specializationId")
+    private List<Trainer> trainers;
 
     public Long getTrainingTypeId() {
         return trainingTypeId;

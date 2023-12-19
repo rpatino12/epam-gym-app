@@ -1,13 +1,18 @@
 package com.rpatino12.epam.gym.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "TRAINEE")
@@ -22,6 +27,14 @@ public class Trainee {
     private Date dateOfBirth;
     @Column(name = "ADDRESS")
     private String address;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "USER_ID", nullable = false, insertable = false, updatable = false)
+    private User user;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "TRAINER_ID", nullable = false, insertable = false, updatable = false)
+    private List<Trainer> trainers;
 
     public Long getTraineeId() {
         return traineeId;
