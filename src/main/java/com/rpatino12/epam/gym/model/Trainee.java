@@ -36,6 +36,15 @@ public class Trainee {
     @JoinColumn(name = "TRAINER_ID", nullable = false, insertable = false, updatable = false)
     private List<Trainer> trainers;
 
+    public Trainee() {
+    }
+
+    public Trainee(Date dateOfBirth, String address, User user) {
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+        this.user = user;
+    }
+
     public Long getTraineeId() {
         return traineeId;
     }
@@ -66,6 +75,22 @@ public class Trainee {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Trainer> getTrainers() {
+        return trainers;
+    }
+
+    public void setTrainers(List<Trainer> trainers) {
+        this.trainers = trainers;
     }
 
     @Override

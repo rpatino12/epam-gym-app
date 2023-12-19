@@ -37,6 +37,14 @@ public class Trainer {
     @JoinColumn(name = "TRAINING_TYPE_ID", insertable = false, updatable = false)
     private TrainingType specialization;
 
+    public Trainer() {
+    }
+
+    public Trainer(Long specializationId, User user) {
+        this.specializationId = specializationId;
+        this.user = user;
+    }
+
     public Long getTrainerId() {
         return trainerId;
     }
@@ -59,6 +67,30 @@ public class Trainer {
 
     public void setSpecializationId(Long specializationId) {
         this.specializationId = specializationId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Trainee> getTrainees() {
+        return trainees;
+    }
+
+    public void setTrainees(List<Trainee> trainees) {
+        this.trainees = trainees;
+    }
+
+    public TrainingType getSpecialization() {
+        return specialization;
+    }
+
+    public void setSpecialization(TrainingType specialization) {
+        this.specialization = specialization;
     }
 
     @Override
