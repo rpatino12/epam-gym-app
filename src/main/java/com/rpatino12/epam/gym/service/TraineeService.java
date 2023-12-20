@@ -4,6 +4,7 @@ import com.rpatino12.epam.gym.dao.TraineeDAO;
 import com.rpatino12.epam.gym.dao.UserDAO;
 import com.rpatino12.epam.gym.model.Trainee;
 import com.rpatino12.epam.gym.model.User;
+import jakarta.transaction.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,10 @@ public class TraineeService {
     private static final Log LOG = LogFactory.getLog(TraineeService.class);
 
     // Trainee Service class should support possibility to create/update/delete/select Trainee profile.
+    @Transactional
     public Trainee save(Trainee newTrainee){
-        userDAO.save(newTrainee.getUser());
+        User newUser = userDAO.save(newTrainee.getUser());
+        newTrainee.setUserId(newUser.getId());
         return traineeDAO.save(newTrainee);
     }
 

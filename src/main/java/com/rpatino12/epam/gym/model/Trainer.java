@@ -30,12 +30,15 @@ public class Trainer {
     @JoinColumn(name = "USER_ID", nullable = false, insertable = false, updatable = false)
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "traineeId")
+    @OneToMany(mappedBy = "traineeId")
     private List<Trainee> trainees;
 
     @ManyToOne
-    @JoinColumn(name = "TRAINING_TYPE_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "SPECIALIZATION_ID", insertable = false, updatable = false)
     private TrainingType specialization;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trainerId")
+    private List<Training> trainings;
 
     public Trainer() {
     }

@@ -29,6 +29,9 @@ public class User {
     @OneToOne(mappedBy = "user")
     private Trainee trainee;
 
+    @OneToOne(mappedBy = "user")
+    private Trainer trainer;
+
     public User() {
     }
 

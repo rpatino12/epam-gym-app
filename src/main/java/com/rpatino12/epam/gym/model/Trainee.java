@@ -28,13 +28,16 @@ public class Trainee {
     @Column(name = "ADDRESS")
     private String address;
 
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "USER_ID", nullable = false, insertable = false, updatable = false)
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     @JoinColumn(name = "TRAINER_ID", nullable = false, insertable = false, updatable = false)
     private List<Trainer> trainers;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trainee")
+    private List<Training> trainings;
 
     public Trainee() {
     }
