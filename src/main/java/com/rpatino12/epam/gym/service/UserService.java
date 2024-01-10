@@ -2,13 +2,19 @@ package com.rpatino12.epam.gym.service;
 
 import com.rpatino12.epam.gym.dao.UserDAO;
 import com.rpatino12.epam.gym.model.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-    @Autowired
-    private UserDAO userDAO;
+
+    private final UserDAO userDAO;
+    private static final Log LOGGER = LogFactory.getLog(UserService.class);
+
+    public UserService(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
 
     public User registerUser(String firstName, String lastName, boolean isActive){
         String username = generateUsername(firstName, lastName);
@@ -19,7 +25,7 @@ public class UserService {
         newUser.setLastName(lastName);
         newUser.setUsername(username);
         newUser.setPassword(password);
-        newUser.setActive(isActive);
+        newUser.setIsActive(isActive);
 
         return userDAO.save(newUser);
     }

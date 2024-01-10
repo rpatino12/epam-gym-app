@@ -8,11 +8,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 import java.util.Date;
 
 @Entity
 @Table(name = "TRAINING")
+@Data
 public class Training {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,60 +44,4 @@ public class Training {
     @ManyToOne
     @JoinColumn(name = "TRAINEE_ID", insertable = false, updatable = false)
     private Trainee trainee;
-
-    public Long getTrainingId() {
-        return trainingId;
-    }
-
-    public void setTrainingId(Long trainingId) {
-        this.trainingId = trainingId;
-    }
-
-    public Long getTraineeId() {
-        return traineeId;
-    }
-
-    public void setTraineeId(Long traineeId) {
-        this.traineeId = traineeId;
-    }
-
-    public Long getTrainerId() {
-        return trainerId;
-    }
-
-    public void setTrainerId(Long trainerId) {
-        this.trainerId = trainerId;
-    }
-
-    public String getTrainingName() {
-        return trainingName;
-    }
-
-    public void setTrainingName(String trainingName) {
-        this.trainingName = trainingName;
-    }
-
-    public Long getTrainingTypeId() {
-        return trainingTypeId;
-    }
-
-    public void setTrainingTypeId(Long trainingTypeId) {
-        this.trainingTypeId = trainingTypeId;
-    }
-
-    public Date getTrainingDate() {
-        return trainingDate;
-    }
-
-    public void setTrainingDate(Date trainingDate) {
-        this.trainingDate = trainingDate;
-    }
-
-    public Double getTrainingDuration() {
-        return trainingDuration;
-    }
-
-    public void setTrainingDuration(Double trainingDuration) {
-        this.trainingDuration = trainingDuration;
-    }
 }

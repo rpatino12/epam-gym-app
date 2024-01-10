@@ -7,11 +7,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 import java.util.List;
 
 @Entity
 @Table(name = "TRAINING_TYPE")
+@Data
 public class TrainingType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,20 +27,4 @@ public class TrainingType {
 
     @OneToMany(mappedBy = "specializationId")
     private List<Trainer> trainers;
-
-    public Long getTrainingTypeId() {
-        return trainingTypeId;
-    }
-
-    public void setTrainingTypeId(Long trainingTypeId) {
-        this.trainingTypeId = trainingTypeId;
-    }
-
-    public String getTrainingTypeName() {
-        return trainingTypeName;
-    }
-
-    public void setTrainingTypeName(String trainingTypeName) {
-        this.trainingTypeName = trainingTypeName;
-    }
 }

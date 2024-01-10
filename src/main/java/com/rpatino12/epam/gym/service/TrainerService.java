@@ -7,18 +7,21 @@ import com.rpatino12.epam.gym.model.User;
 import jakarta.transaction.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class TrainerService {
-    @Autowired
-    private TrainerDAO trainerDAO;
-    @Autowired
-    private UserDAO userDAO;
-    private static final Log LOG = LogFactory.getLog(TrainerService.class);
+
+    private final TrainerDAO trainerDAO;
+    private final UserDAO userDAO;
+    private static final Log LOGGER = LogFactory.getLog(TrainerService.class);
+
+    public TrainerService(TrainerDAO trainerDAO, UserDAO userDAO) {
+        this.trainerDAO = trainerDAO;
+        this.userDAO = userDAO;
+    }
 
     // Trainer Service class should support possibility to create/update/select Trainer profile.
     @Transactional
@@ -36,7 +39,7 @@ public class TrainerService {
                             user.setLastName(newTrainer.getUser().getLastName());
                             user.setUsername(newTrainer.getUser().getUsername());
                             user.setPassword(newTrainer.getUser().getPassword());
-                            user.setActive(newTrainer.getUser().getActive());
+                            user.setIsActive(newTrainer.getUser().getIsActive());
                             return userDAO.save(user);
                         }
                 );

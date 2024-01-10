@@ -7,7 +7,6 @@ import com.rpatino12.epam.gym.model.User;
 import jakarta.transaction.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +14,15 @@ import java.util.Optional;
 
 @Service
 public class TraineeService {
-    @Autowired
-    private TraineeDAO traineeDAO;
-    @Autowired
-    private UserDAO userDAO;
-    private static final Log LOG = LogFactory.getLog(TraineeService.class);
+
+    private final TraineeDAO traineeDAO;
+    private final UserDAO userDAO;
+    private static final Log LOGGER = LogFactory.getLog(TraineeService.class);
+
+    public TraineeService(TraineeDAO traineeDAO, UserDAO userDAO) {
+        this.traineeDAO = traineeDAO;
+        this.userDAO = userDAO;
+    }
 
     // Trainee Service class should support possibility to create/update/delete/select Trainee profile.
     @Transactional
@@ -37,7 +40,7 @@ public class TraineeService {
                             user.setLastName(newTrainee.getUser().getLastName());
                             user.setUsername(newTrainee.getUser().getUsername());
                             user.setPassword(newTrainee.getUser().getPassword());
-                            user.setActive(newTrainee.getUser().getActive());
+                            user.setIsActive(newTrainee.getUser().getIsActive());
                             return userDAO.save(user);
                         }
                 );

@@ -11,11 +11,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 import java.util.List;
 
 @Entity
 @Table(name = "TRAINER")
+@Data
 public class Trainer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,62 +48,5 @@ public class Trainer {
     public Trainer(Long specializationId, User user) {
         this.specializationId = specializationId;
         this.user = user;
-    }
-
-    public Long getTrainerId() {
-        return trainerId;
-    }
-
-    public void setTrainerId(Long trainerId) {
-        this.trainerId = trainerId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getSpecializationId() {
-        return specializationId;
-    }
-
-    public void setSpecializationId(Long specializationId) {
-        this.specializationId = specializationId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public List<Trainee> getTrainees() {
-        return trainees;
-    }
-
-    public void setTrainees(List<Trainee> trainees) {
-        this.trainees = trainees;
-    }
-
-    public TrainingType getSpecialization() {
-        return specialization;
-    }
-
-    public void setSpecialization(TrainingType specialization) {
-        this.specialization = specialization;
-    }
-
-    @Override
-    public String toString() {
-        return "Trainer{" +
-                "trainerId=" + trainerId +
-                ", userId=" + userId +
-                ", specializationId=" + specializationId +
-                '}';
     }
 }
