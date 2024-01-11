@@ -7,12 +7,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.Transient;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "USERS")
-@Data
-public class User {
+@Getter
+@Setter
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")
@@ -28,20 +33,23 @@ public class User {
     @Column(name = "IS_ACTIVE")
     private Boolean isActive;
 
+    @Transient
     @OneToOne(mappedBy = "user")
     private Trainee trainee;
 
+    @Transient
     @OneToOne(mappedBy = "user")
     private Trainer trainer;
 
-    public User() {
-    }
-
-    public User(String firstName, String lastName, String password, Boolean isActive) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = firstName + "." + lastName;
-        this.password = password;
-        this.isActive = isActive;
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", isActive=" + isActive +
+                '}';
     }
 }

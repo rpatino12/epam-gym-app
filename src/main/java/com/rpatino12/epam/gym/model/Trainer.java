@@ -3,50 +3,58 @@ package com.rpatino12.epam.gym.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import jakarta.persistence.Transient;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "TRAINER")
-@Data
-public class Trainer {
+@Getter
+@Setter
+public class Trainer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TRAINER_ID")
     private Long trainerId;
-    @Column(name = "USER_ID")
-    private Long userId; // (FK)
-    @Column(name = "SPECIALIZATION_ID")
-    private Long specializationId; // trainingTypeId (FK)
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "USER_ID", nullable = false, insertable = false, updatable = false)
+    @OneToOne
+    @JoinColumn(name = "USER_ID")
     private User user;
 
-    @OneToMany(mappedBy = "traineeId")
-    private List<Trainee> trainees;
-
     @ManyToOne
-    @JoinColumn(name = "SPECIALIZATION_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "SPECIALIZATION_ID")
     private TrainingType specialization;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trainerId")
-    private List<Training> trainings;
+    @Transient
+    @ManyToMany(mappedBy = "trainers")
+    private Set<Trainee> trainees = new HashSet<>();
 
-    public Trainer() {
-    }
+    @Transient
+    @OneToMany(mappedBy = "trainer")
+    private List<Training> trainingsList = new ArrayList<>();
 
-    public Trainer(Long specializationId, User user) {
-        this.specializationId = specializationId;
-        this.user = user;
+    @Override
+    public String toString() {
+        return "Trainer{" +
+                "trainerId=" + trainerId +
+                ", user=" + user +
+                ", specialization=" + specialization +
+                '}';
     }
 }

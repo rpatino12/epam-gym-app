@@ -68,8 +68,8 @@ public class AppStartupEvent implements ApplicationListener<ApplicationReadyEven
 //        System.out.println("   Saving: " + traineeService.save(trainee));
 //        System.out.println("   Saving: " + traineeService.save(trainee2));
 //
-//        Iterable<Trainee> trainees = this.traineeDAO.findAll();
-//        trainees.forEach(System.out::println);
+        Iterable<Trainee> trainees = this.traineeDAO.findAll();
+        trainees.forEach(System.out::println);
 //
 //        traineeService.delete(26L);
 //
@@ -78,5 +78,9 @@ public class AppStartupEvent implements ApplicationListener<ApplicationReadyEven
 //
 //        Iterable<User> users = this.userDAO.findAll();
 //        users.forEach(System.out::println);
+
+//        Iterable<Training> trainings = this.trainingDAO.findAll();
+//        trainings.forEach(System.out::println);
+
     }
 }

@@ -27,23 +27,23 @@ public class TraineeService {
     // Trainee Service class should support possibility to create/update/delete/select Trainee profile.
     @Transactional
     public Trainee save(Trainee newTrainee){
-        User newUser = userDAO.save(newTrainee.getUser());
-        newTrainee.setUserId(newUser.getId());
+//        User newUser = userDAO.save(newTrainee.getUser());
+//        newTrainee.setUserId(newUser.getId());
         return traineeDAO.save(newTrainee);
     }
 
     public Trainee update(Trainee newTrainee, Long traineeId) {
-        userDAO.findById(newTrainee.getUserId())
-                .map(
-                        user -> {
-                            user.setFirstName(newTrainee.getUser().getFirstName());
-                            user.setLastName(newTrainee.getUser().getLastName());
-                            user.setUsername(newTrainee.getUser().getUsername());
-                            user.setPassword(newTrainee.getUser().getPassword());
-                            user.setIsActive(newTrainee.getUser().getIsActive());
-                            return userDAO.save(user);
-                        }
-                );
+//        userDAO.findById(newTrainee.getUserId())
+//                .map(
+//                        user -> {
+//                            user.setFirstName(newTrainee.getUser().getFirstName());
+//                            user.setLastName(newTrainee.getUser().getLastName());
+//                            user.setUsername(newTrainee.getUser().getUsername());
+//                            user.setPassword(newTrainee.getUser().getPassword());
+//                            user.setIsActive(newTrainee.getUser().getIsActive());
+//                            return userDAO.save(user);
+//                        }
+//                );
         return traineeDAO.findById(traineeId)
                 .map(
                         trainee -> {
