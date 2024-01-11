@@ -38,7 +38,7 @@ public class Trainee implements Serializable {
     @Column(name = "ADDRESS")
     private String address;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
     private User user;
 
@@ -50,7 +50,7 @@ public class Trainee implements Serializable {
     private Set<Trainer> trainers = new HashSet<>();
 
     @Transient
-    @OneToMany(mappedBy = "trainee")
+    @OneToMany(mappedBy = "trainee", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Training> trainingsList = new ArrayList<>();
 
     @Override

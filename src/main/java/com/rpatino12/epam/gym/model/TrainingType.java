@@ -30,11 +30,11 @@ public class TrainingType implements Serializable {
     private String trainingTypeName;
 
     @Transient
-    @OneToMany(mappedBy = "trainingType")
+    @OneToMany(mappedBy = "trainingType", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Training> trainingsList = new ArrayList<>();
 
     @Transient
-    @OneToMany(mappedBy = "specialization")
+    @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Trainer> trainers = new ArrayList<>();
 
     @Override

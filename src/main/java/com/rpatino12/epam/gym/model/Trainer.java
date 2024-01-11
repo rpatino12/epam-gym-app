@@ -33,20 +33,20 @@ public class Trainer implements Serializable {
     @Column(name = "TRAINER_ID")
     private Long trainerId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SPECIALIZATION_ID")
     private TrainingType specialization;
 
     @Transient
-    @ManyToMany(mappedBy = "trainers")
+    @ManyToMany(mappedBy = "trainers", fetch = FetchType.LAZY)
     private Set<Trainee> trainees = new HashSet<>();
 
     @Transient
-    @OneToMany(mappedBy = "trainer")
+    @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Training> trainingsList = new ArrayList<>();
 
     @Override

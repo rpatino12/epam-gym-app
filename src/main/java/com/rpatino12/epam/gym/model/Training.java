@@ -31,15 +31,15 @@ public class Training implements Serializable {
     @Column(name = "TRAINING_DURATION")
     private Double trainingDuration;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TRAINING_TYPE_ID")
     private TrainingType trainingType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TRAINER_ID")
     private Trainer trainer;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TRAINEE_ID")
     private Trainee trainee;
 

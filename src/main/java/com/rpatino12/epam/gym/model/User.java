@@ -1,5 +1,6 @@
 package com.rpatino12.epam.gym.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,11 +35,11 @@ public class User implements Serializable {
     private Boolean isActive;
 
     @Transient
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Trainee trainee;
 
     @Transient
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Trainer trainer;
 
     @Override
