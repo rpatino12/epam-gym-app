@@ -1,6 +1,6 @@
 package com.rpatino12.epam.gym.service;
 
-import com.rpatino12.epam.gym.dao.TraineeDAO;
+import com.rpatino12.epam.gym.dao.TraineeRepository;
 import com.rpatino12.epam.gym.model.Trainee;
 import jakarta.transaction.Transactional;
 import org.apache.commons.logging.Log;
@@ -13,12 +13,12 @@ import java.util.Optional;
 @Service
 public class TraineeService {
 
-    private final TraineeDAO traineeDAO;
+    private final TraineeRepository traineeRepository;
     private final UserService userService;
     private static final Log LOGGER = LogFactory.getLog(TraineeService.class);
 
-    public TraineeService(TraineeDAO traineeDAO, UserService userService) {
-        this.traineeDAO = traineeDAO;
+    public TraineeService(TraineeRepository traineeRepository, UserService userService) {
+        this.traineeRepository = traineeRepository;
         this.userService = userService;
     }
 
@@ -26,19 +26,19 @@ public class TraineeService {
     @Transactional
     public Trainee save(Trainee newTrainee){
         newTrainee.setUser(userService.registerUser(newTrainee.getUser()));
-        return traineeDAO.save(newTrainee);
+        return traineeRepository.save(newTrainee);
     }
 
     @Transactional
     public Trainee update(Trainee newTrainee, Long traineeId) {
         userService.updateUser(newTrainee.getUser(), newTrainee.getUser().getId());
-        return traineeDAO.findById(traineeId)
+        return traineeRepository.findById(traineeId)
                 .map(
                         trainee -> {
                             trainee.setDateOfBirth(newTrainee.getDateOfBirth());
                             trainee.setAddress(newTrainee.getAddress());
                             trainee.setUser(newTrainee.getUser());
-                            return traineeDAO.save(trainee);
+                            return traineeRepository.save(trainee);
                         }
                 ).get();
     }
@@ -46,7 +46,7 @@ public class TraineeService {
     @Transactional
     public boolean delete(Long traineeId){
         try {
-            traineeDAO.deleteById(traineeId);
+            traineeRepository.deleteById(traineeId);
             return true;
         } catch (EmptyResultDataAccessException e) {
             return false;
@@ -55,6 +55,6 @@ public class TraineeService {
 
     @Transactional
     public Optional<Trainee> select(Long traineeId){
-        return traineeDAO.findById(traineeId);
+        return traineeRepository.findById(traineeId);
     }
 }

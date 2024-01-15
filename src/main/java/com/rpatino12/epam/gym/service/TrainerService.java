@@ -1,6 +1,6 @@
 package com.rpatino12.epam.gym.service;
 
-import com.rpatino12.epam.gym.dao.TrainerDAO;
+import com.rpatino12.epam.gym.dao.TrainerRepository;
 import com.rpatino12.epam.gym.model.Trainer;
 import jakarta.transaction.Transactional;
 import org.apache.commons.logging.Log;
@@ -12,12 +12,12 @@ import java.util.Optional;
 @Service
 public class TrainerService {
 
-    private final TrainerDAO trainerDAO;
+    private final TrainerRepository trainerRepository;
     private final UserService userService;
     private static final Log LOGGER = LogFactory.getLog(TrainerService.class);
 
-    public TrainerService(TrainerDAO trainerDAO, UserService userService) {
-        this.trainerDAO = trainerDAO;
+    public TrainerService(TrainerRepository trainerRepository, UserService userService) {
+        this.trainerRepository = trainerRepository;
         this.userService = userService;
     }
 
@@ -25,23 +25,23 @@ public class TrainerService {
     @Transactional
     public Trainer save(Trainer newTrainer){
         newTrainer.setUser(userService.registerUser(newTrainer.getUser()));
-        return trainerDAO.save(newTrainer);
+        return trainerRepository.save(newTrainer);
     }
 
     @Transactional
     public Trainer update(Trainer newTrainer, Long trainerId){
         userService.updateUser(newTrainer.getUser(), newTrainer.getUser().getId());
-        return trainerDAO.findById(trainerId)
+        return trainerRepository.findById(trainerId)
                 .map(
                         trainer -> {
                             trainer.setSpecialization(newTrainer.getSpecialization());
-                            return trainerDAO.save(trainer);
+                            return trainerRepository.save(trainer);
                         }
                 ).get();
     }
 
     @Transactional
     public Optional<Trainer> select(Long trainerId){
-        return trainerDAO.findById(trainerId);
+        return trainerRepository.findById(trainerId);
     }
 }

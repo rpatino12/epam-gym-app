@@ -1,10 +1,10 @@
 package com.rpatino12.epam.gym.util;
 
-import com.rpatino12.epam.gym.dao.TraineeDAO;
-import com.rpatino12.epam.gym.dao.TrainerDAO;
-import com.rpatino12.epam.gym.dao.TrainingDAO;
+import com.rpatino12.epam.gym.dao.TraineeRepository;
+import com.rpatino12.epam.gym.dao.TrainerRepository;
+import com.rpatino12.epam.gym.dao.TrainingRepository;
 import com.rpatino12.epam.gym.dao.TrainingTypeRepository;
-import com.rpatino12.epam.gym.dao.UserDAO;
+import com.rpatino12.epam.gym.dao.UserRepository;
 import com.rpatino12.epam.gym.model.Trainee;
 import com.rpatino12.epam.gym.model.Trainer;
 import com.rpatino12.epam.gym.model.Training;
@@ -24,14 +24,13 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Component
 public class AppStartupEvent implements ApplicationListener<ApplicationReadyEvent> {
-    private final UserDAO userDAO;
-    private final TrainerDAO trainerDAO;
-    private final TraineeDAO traineeDAO;
-    private final TrainingDAO trainingDAO;
+    private final UserRepository userRepository;
+    private final TrainerRepository trainerRepository;
+    private final TraineeRepository traineeRepository;
+    private final TrainingRepository trainingRepository;
     private final TrainingTypeRepository trainingTypeRepository;
     private final UserService userService;
     private final TraineeService traineeService;
@@ -40,11 +39,11 @@ public class AppStartupEvent implements ApplicationListener<ApplicationReadyEven
     private final DateUtils dateUtils;
     private static final Log LOGGER = LogFactory.getLog(AppStartupEvent.class);
 
-    public AppStartupEvent(UserDAO userDAO, TrainerDAO trainerDAO, TraineeDAO traineeDAO, TrainingDAO trainingDAO, TrainingTypeRepository trainingTypeRepository, UserService userService, TraineeService traineeService, TrainerService trainerService, TrainingService trainingService, DateUtils dateUtils) {
-        this.userDAO = userDAO;
-        this.trainerDAO = trainerDAO;
-        this.traineeDAO = traineeDAO;
-        this.trainingDAO = trainingDAO;
+    public AppStartupEvent(UserRepository userRepository, TrainerRepository trainerRepository, TraineeRepository traineeRepository, TrainingRepository trainingRepository, TrainingTypeRepository trainingTypeRepository, UserService userService, TraineeService traineeService, TrainerService trainerService, TrainingService trainingService, DateUtils dateUtils) {
+        this.userRepository = userRepository;
+        this.trainerRepository = trainerRepository;
+        this.traineeRepository = traineeRepository;
+        this.trainingRepository = trainingRepository;
         this.trainingTypeRepository = trainingTypeRepository;
         this.userService = userService;
         this.traineeService = traineeService;
@@ -59,7 +58,7 @@ public class AppStartupEvent implements ApplicationListener<ApplicationReadyEven
 
         // Testing Trainee service
         LOGGER.debug("Trainee service!");
-        Iterable<Trainee> trainees = this.traineeDAO.findAll();
+        Iterable<Trainee> trainees = this.traineeRepository.findAll();
 //        trainees.forEach(System.out::println);
 
         LOGGER.info("Instantiating user Ricardo: ");
@@ -103,16 +102,16 @@ public class AppStartupEvent implements ApplicationListener<ApplicationReadyEven
 
         LOGGER.info("Selecting trainee 1: " + traineeService.select(1L));
 
-        trainees = this.traineeDAO.findAll();
+        trainees = this.traineeRepository.findAll();
 //        trainees.forEach(System.out::println);
 
-        Iterable<User> users = this.userDAO.findAll();
+        Iterable<User> users = this.userRepository.findAll();
 //        users.forEach(System.out::println);
 
         // Testing Trainer service
         LOGGER.debug("Trainer service!");
 
-        Iterable<Trainer> trainers = this.trainerDAO.findAll();
+        Iterable<Trainer> trainers = this.trainerRepository.findAll();
 //        trainers.forEach(System.out::println);
 
         LOGGER.info("Instantiating user 3 Guillermo: ");
@@ -162,16 +161,16 @@ public class AppStartupEvent implements ApplicationListener<ApplicationReadyEven
         LOGGER.info("Selecting Trainer: ");
         System.out.println(trainerService.select(2L).get().getSpecialization().getTrainingTypeName());
 
-        trainers = this.trainerDAO.findAll();
+        trainers = this.trainerRepository.findAll();
 //        trainers.forEach(System.out::println);
 //
-        users = this.userDAO.findAll();
+        users = this.userRepository.findAll();
 //        users.forEach(System.out::println);
 
         // Testing training service
         LOGGER.debug("Training service!");
 
-        Iterable<Training> trainings = this.trainingDAO.findAll();
+        Iterable<Training> trainings = this.trainingRepository.findAll();
 //        trainings.forEach(System.out::println);
 
         LOGGER.info("Selecting Training: ");
@@ -190,10 +189,10 @@ public class AppStartupEvent implements ApplicationListener<ApplicationReadyEven
         LOGGER.info("Creating Training: ");
         trainingService.save(training1);
 
-        trainings = this.trainingDAO.findAll();
+        trainings = this.trainingRepository.findAll();
 //        trainings.forEach(System.out::println);
 
-        users = this.userDAO.findAll();
+        users = this.userRepository.findAll();
         users.forEach(System.out::println);
     }
 }

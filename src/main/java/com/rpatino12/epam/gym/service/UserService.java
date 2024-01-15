@@ -1,6 +1,6 @@
 package com.rpatino12.epam.gym.service;
 
-import com.rpatino12.epam.gym.dao.UserDAO;
+import com.rpatino12.epam.gym.dao.UserRepository;
 import com.rpatino12.epam.gym.model.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,11 +11,11 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    private final UserDAO userDAO;
+    private final UserRepository userRepository;
     private static final Log LOGGER = LogFactory.getLog(UserService.class);
 
-    public UserService(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     public User registerUser(User user){
@@ -29,15 +29,15 @@ public class UserService {
         newUser.setPassword(password);
         newUser.setIsActive(user.getIsActive());
 
-        return userDAO.save(newUser);
+        return userRepository.save(newUser);
     }
 
     public Optional<User> getUser(Long userId){
-        return userDAO.findById(userId);
+        return userRepository.findById(userId);
     }
 
     public User updateUser(User newUser, Long userId){
-        return userDAO.findById(userId)
+        return userRepository.findById(userId)
                 .map(
                         user -> {
                             user.setFirstName(newUser.getFirstName());
@@ -45,7 +45,7 @@ public class UserService {
                             user.setUsername(generateUsername(newUser.getFirstName(), newUser.getLastName()));
                             user.setPassword(generateRandomPassword());
                             user.setIsActive(newUser.getIsActive());
-                            return userDAO.save(user);
+                            return userRepository.save(user);
                         }
                 ).get();
     }
@@ -56,7 +56,7 @@ public class UserService {
 
         // Check if the username already exists, add a serial number if necessary
         int serialNumber = 1;
-        while (userDAO.existsUserByUsername(username)) {
+        while (userRepository.existsUserByUsername(username)) {
             username = baseUsername + serialNumber++;
         }
         return username;
