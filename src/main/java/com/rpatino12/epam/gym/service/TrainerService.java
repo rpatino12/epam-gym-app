@@ -2,6 +2,7 @@ package com.rpatino12.epam.gym.service;
 
 import com.rpatino12.epam.gym.dao.TrainerRepository;
 import com.rpatino12.epam.gym.model.Trainer;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,12 +26,14 @@ public class TrainerService {
     @Transactional
     public Trainer save(Trainer newTrainer){
         newTrainer.setUser(userService.registerUser(newTrainer.getUser()));
+        LOGGER.info("Creating (persisting) trainer: " + newTrainer);
         return trainerRepository.save(newTrainer);
     }
 
     @Transactional
     public Trainer update(Trainer newTrainer, Long trainerId){
         userService.updateUser(newTrainer.getUser(), newTrainer.getUser().getId());
+        LOGGER.info("Updating trainer: \nNewTrainer: " + newTrainer + "\nId: " + trainerId);
         return trainerRepository.findById(trainerId)
                 .map(
                         trainer -> {
@@ -42,6 +45,12 @@ public class TrainerService {
 
     @Transactional
     public Optional<Trainer> select(Long trainerId){
+        LOGGER.info("Getting trainer");
         return trainerRepository.findById(trainerId);
+    }
+
+    @PostConstruct
+    public void init(){
+        LOGGER.info("Starting TrainerService");
     }
 }

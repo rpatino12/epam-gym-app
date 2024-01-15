@@ -2,6 +2,7 @@ package com.rpatino12.epam.gym.service;
 
 import com.rpatino12.epam.gym.dao.UserRepository;
 import com.rpatino12.epam.gym.model.User;
+import jakarta.annotation.PostConstruct;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -29,14 +30,17 @@ public class UserService {
         newUser.setPassword(password);
         newUser.setIsActive(user.getIsActive());
 
+        LOGGER.info("Creating (persisting) user: " + newUser);
         return userRepository.save(newUser);
     }
 
     public Optional<User> getUser(Long userId){
+        LOGGER.info("Getting user");
         return userRepository.findById(userId);
     }
 
     public User updateUser(User newUser, Long userId){
+        LOGGER.info("Updating user: \nNewUser: " + newUser + "Id: " + userId);
         return userRepository.findById(userId)
                 .map(
                         user -> {
@@ -72,5 +76,10 @@ public class UserService {
             password.append(allowedChars.charAt(randomIndex));
         }
         return password.toString();
+    }
+
+    @PostConstruct
+    public void init(){
+        LOGGER.info("Starting UserService");
     }
 }

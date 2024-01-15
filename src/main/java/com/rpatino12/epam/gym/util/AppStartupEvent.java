@@ -193,6 +193,6 @@ public class AppStartupEvent implements ApplicationListener<ApplicationReadyEven
 //        trainings.forEach(System.out::println);
 
         users = this.userRepository.findAll();
-        users.forEach(System.out::println);
+//        users.forEach(System.out::println);
     }
 }

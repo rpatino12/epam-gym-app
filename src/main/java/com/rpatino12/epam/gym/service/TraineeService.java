@@ -2,6 +2,7 @@ package com.rpatino12.epam.gym.service;
 
 import com.rpatino12.epam.gym.dao.TraineeRepository;
 import com.rpatino12.epam.gym.model.Trainee;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,12 +27,14 @@ public class TraineeService {
     @Transactional
     public Trainee save(Trainee newTrainee){
         newTrainee.setUser(userService.registerUser(newTrainee.getUser()));
+        LOGGER.info("Creating (persisting) trainee: " + newTrainee);
         return traineeRepository.save(newTrainee);
     }
 
     @Transactional
     public Trainee update(Trainee newTrainee, Long traineeId) {
         userService.updateUser(newTrainee.getUser(), newTrainee.getUser().getId());
+        LOGGER.info("Updating trainee: \nNewTrainee: " + newTrainee + "Id: " + traineeId);
         return traineeRepository.findById(traineeId)
                 .map(
                         trainee -> {
@@ -45,16 +48,25 @@ public class TraineeService {
 
     @Transactional
     public boolean delete(Long traineeId){
+        LOGGER.info("Deleting trainee");
         try {
             traineeRepository.deleteById(traineeId);
+            LOGGER.info("Delete successful");
             return true;
         } catch (EmptyResultDataAccessException e) {
+            LOGGER.info("Couldn't delete trainee");
             return false;
         }
     }
 
     @Transactional
     public Optional<Trainee> select(Long traineeId){
+        LOGGER.info("Getting trainee");
         return traineeRepository.findById(traineeId);
+    }
+
+    @PostConstruct
+    public void init(){
+        LOGGER.info("Starting TraineeService");
     }
 }
