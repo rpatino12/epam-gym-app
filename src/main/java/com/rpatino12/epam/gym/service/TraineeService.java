@@ -1,9 +1,7 @@
 package com.rpatino12.epam.gym.service;
 
 import com.rpatino12.epam.gym.dao.TraineeDAO;
-import com.rpatino12.epam.gym.dao.UserDAO;
 import com.rpatino12.epam.gym.model.Trainee;
-import com.rpatino12.epam.gym.model.User;
 import jakarta.transaction.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,34 +14,24 @@ import java.util.Optional;
 public class TraineeService {
 
     private final TraineeDAO traineeDAO;
-    private final UserDAO userDAO;
+    private final UserService userService;
     private static final Log LOGGER = LogFactory.getLog(TraineeService.class);
 
-    public TraineeService(TraineeDAO traineeDAO, UserDAO userDAO) {
+    public TraineeService(TraineeDAO traineeDAO, UserService userService) {
         this.traineeDAO = traineeDAO;
-        this.userDAO = userDAO;
+        this.userService = userService;
     }
 
     // Trainee Service class should support possibility to create/update/delete/select Trainee profile.
     @Transactional
     public Trainee save(Trainee newTrainee){
-//        User newUser = userDAO.save(newTrainee.getUser());
-//        newTrainee.setUserId(newUser.getId());
+        newTrainee.setUser(userService.registerUser(newTrainee.getUser()));
         return traineeDAO.save(newTrainee);
     }
 
+    @Transactional
     public Trainee update(Trainee newTrainee, Long traineeId) {
-//        userDAO.findById(newTrainee.getUserId())
-//                .map(
-//                        user -> {
-//                            user.setFirstName(newTrainee.getUser().getFirstName());
-//                            user.setLastName(newTrainee.getUser().getLastName());
-//                            user.setUsername(newTrainee.getUser().getUsername());
-//                            user.setPassword(newTrainee.getUser().getPassword());
-//                            user.setIsActive(newTrainee.getUser().getIsActive());
-//                            return userDAO.save(user);
-//                        }
-//                );
+        userService.updateUser(newTrainee.getUser(), newTrainee.getUser().getId());
         return traineeDAO.findById(traineeId)
                 .map(
                         trainee -> {
@@ -55,6 +43,7 @@ public class TraineeService {
                 ).get();
     }
 
+    @Transactional
     public boolean delete(Long traineeId){
         try {
             traineeDAO.deleteById(traineeId);
@@ -64,6 +53,7 @@ public class TraineeService {
         }
     }
 
+    @Transactional
     public Optional<Trainee> select(Long traineeId){
         return traineeDAO.findById(traineeId);
     }

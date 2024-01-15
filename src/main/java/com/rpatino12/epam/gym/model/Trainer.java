@@ -33,11 +33,11 @@ public class Trainer implements Serializable {
     @Column(name = "TRAINER_ID")
     private Long trainerId;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "SPECIALIZATION_ID")
     private TrainingType specialization;
 

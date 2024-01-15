@@ -6,6 +6,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -16,18 +18,36 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public User registerUser(String firstName, String lastName, boolean isActive){
-        String username = generateUsername(firstName, lastName);
+    public User registerUser(User user){
+        String username = generateUsername(user.getFirstName(), user.getLastName());
         String password = generateRandomPassword();
 
         User newUser = new User();
-        newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
+        newUser.setFirstName(user.getFirstName());
+        newUser.setLastName(user.getLastName());
         newUser.setUsername(username);
         newUser.setPassword(password);
-        newUser.setIsActive(isActive);
+        newUser.setIsActive(user.getIsActive());
 
         return userDAO.save(newUser);
+    }
+
+    public Optional<User> getUser(Long userId){
+        return userDAO.findById(userId);
+    }
+
+    public User updateUser(User newUser, Long userId){
+        return userDAO.findById(userId)
+                .map(
+                        user -> {
+                            user.setFirstName(newUser.getFirstName());
+                            user.setLastName(newUser.getLastName());
+                            user.setUsername(generateUsername(newUser.getFirstName(), newUser.getLastName()));
+                            user.setPassword(generateRandomPassword());
+                            user.setIsActive(newUser.getIsActive());
+                            return userDAO.save(user);
+                        }
+                ).get();
     }
 
     private String generateUsername(String firstName, String lastName) {

@@ -14,7 +14,7 @@ insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values 
 insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Earl', 'Winwood', 'Earl.Winwood', 'eaqnofzhks', false);
 insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Kit', 'Lendon', 'Kit.Lendon', 'rmhuedxygb', true);
 insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Lindon', 'Chessel', 'Lindon.Chessel', 'djxqtyvbfc', false);
-insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Claudette', 'DeAmbrosi', 'Claudette.De Ambrosi', 'goxmeydsbj', true);
+insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Claudette', 'DeAmbrosi', 'Claudette.DeAmbrosi', 'goxmeydsbj', true);
 insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Doris', 'Height', 'Doris.Height', 'aptjuwicdv', true);
 insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Janessa', 'Creeghan', 'Janessa.Creeghan', 'wolmtpihqn', false);
 insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Barb', 'Benion', 'Barb.Benion', 'omxdehbvcw', false);
@@ -25,7 +25,7 @@ insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values 
 insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Jillian', 'Dottrell', 'Jillian.Dottrell', 'awpdzocfky', true);
 insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Lynelle', 'Haruard', 'Lynelle.Haruard', 'ejaxqgwufv', true);
 insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Tabbie', 'Arbon', 'Tabbie.Arbon', 'yvbjfeazlu', false);
-insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Nannie', 'Parisot', 'Nannie.de la Valette Parisot', 'wnsfarbjot', false);
+insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Nannie', 'Parisot', 'Nannie.Parisot', 'wnsfarbjot', false);
 insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Tailor', 'Rigler', 'Tailor.Rigler', 'eajimdcvxk', true);
 insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Erinn', 'Lafflin', 'Erinn.Lafflin', 'hdjbmcvgyt', true);
 insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Jermayne', 'Beaze', 'Jermayne.Beaze', 'okmrfgbtix', true);

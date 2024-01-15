@@ -19,7 +19,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,12 +38,12 @@ public class Trainee implements Serializable {
     @Column(name = "ADDRESS")
     private String address;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinColumn(name = "USER_ID")
     private User user;
 
     @Transient
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(name="TRAINEE2TRAINER",
             joinColumns=@JoinColumn(name="TRAINEE_ID"),
             inverseJoinColumns=@JoinColumn(name="TRAINER_ID"))

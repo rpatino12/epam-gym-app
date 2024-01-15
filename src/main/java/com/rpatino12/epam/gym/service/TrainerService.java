@@ -1,9 +1,7 @@
 package com.rpatino12.epam.gym.service;
 
 import com.rpatino12.epam.gym.dao.TrainerDAO;
-import com.rpatino12.epam.gym.dao.UserDAO;
 import com.rpatino12.epam.gym.model.Trainer;
-import com.rpatino12.epam.gym.model.User;
 import jakarta.transaction.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,34 +13,24 @@ import java.util.Optional;
 public class TrainerService {
 
     private final TrainerDAO trainerDAO;
-    private final UserDAO userDAO;
+    private final UserService userService;
     private static final Log LOGGER = LogFactory.getLog(TrainerService.class);
 
-    public TrainerService(TrainerDAO trainerDAO, UserDAO userDAO) {
+    public TrainerService(TrainerDAO trainerDAO, UserService userService) {
         this.trainerDAO = trainerDAO;
-        this.userDAO = userDAO;
+        this.userService = userService;
     }
 
     // Trainer Service class should support possibility to create/update/select Trainer profile.
     @Transactional
     public Trainer save(Trainer newTrainer){
-//        User newUser = userDAO.save(newTrainer.getUser());
-//        newTrainer.setUserId(newUser.getId());
+        newTrainer.setUser(userService.registerUser(newTrainer.getUser()));
         return trainerDAO.save(newTrainer);
     }
 
+    @Transactional
     public Trainer update(Trainer newTrainer, Long trainerId){
-//        userDAO.findById(newTrainer.getUserId())
-//                .map(
-//                        user -> {
-//                            user.setFirstName(newTrainer.getUser().getFirstName());
-//                            user.setLastName(newTrainer.getUser().getLastName());
-//                            user.setUsername(newTrainer.getUser().getUsername());
-//                            user.setPassword(newTrainer.getUser().getPassword());
-//                            user.setIsActive(newTrainer.getUser().getIsActive());
-//                            return userDAO.save(user);
-//                        }
-//                );
+        userService.updateUser(newTrainer.getUser(), newTrainer.getUser().getId());
         return trainerDAO.findById(trainerId)
                 .map(
                         trainer -> {
@@ -52,6 +40,7 @@ public class TrainerService {
                 ).get();
     }
 
+    @Transactional
     public Optional<Trainer> select(Long trainerId){
         return trainerDAO.findById(trainerId);
     }

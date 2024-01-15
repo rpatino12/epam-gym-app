@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 @Entity
 @Table(name = "TRAINING")
@@ -31,15 +31,15 @@ public class Training implements Serializable {
     @Column(name = "TRAINING_DURATION")
     private Double trainingDuration;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TRAINING_TYPE_ID")
     private TrainingType trainingType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TRAINER_ID")
     private Trainer trainer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TRAINEE_ID")
     private Trainee trainee;
 
