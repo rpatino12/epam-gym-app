@@ -35,11 +35,11 @@ public class Training implements Serializable {
     @JoinColumn(name = "TRAINING_TYPE_ID")
     private TrainingType trainingType;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TRAINER_ID")
     private Trainer trainer;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TRAINEE_ID")
     private Trainee trainee;
 
@@ -51,8 +51,6 @@ public class Training implements Serializable {
                 ", trainingDate=" + trainingDate +
                 ", trainingDuration=" + trainingDuration +
                 ", trainingType=" + trainingType +
-                ", trainer=" + trainer +
-                ", trainee=" + trainee +
                 '}';
     }
 }
