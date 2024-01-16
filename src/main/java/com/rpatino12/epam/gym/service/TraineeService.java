@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,6 +27,9 @@ public class TraineeService {
     // Trainee Service class should support possibility to create/update/delete/select Trainee profile.
     @Transactional
     public Trainee save(Trainee newTrainee){
+        if (null == newTrainee){
+            throw new RuntimeException("Trainee cannot be null");
+        }
         newTrainee.setUser(userService.registerUser(newTrainee.getUser()));
         LOGGER.info("Creating (persisting) trainee: " + newTrainee);
         return traineeRepository.save(newTrainee);
@@ -48,7 +52,7 @@ public class TraineeService {
 
     @Transactional
     public boolean delete(Long traineeId){
-        LOGGER.info("Deleting trainee");
+        LOGGER.info("Deleting trainee " + traineeId);
         try {
             traineeRepository.deleteById(traineeId);
             LOGGER.info("Delete successful");
@@ -61,8 +65,14 @@ public class TraineeService {
 
     @Transactional
     public Optional<Trainee> select(Long traineeId){
-        LOGGER.info("Getting trainee");
+        LOGGER.info("Getting trainee " + traineeId);
         return traineeRepository.findById(traineeId);
+    }
+
+    @Transactional
+    public List<Trainee> getAll(){
+        LOGGER.info("Getting all trainees");
+        return traineeRepository.findAll();
     }
 
     @PostConstruct
