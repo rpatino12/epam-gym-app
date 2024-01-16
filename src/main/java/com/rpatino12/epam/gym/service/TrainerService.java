@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,6 +26,9 @@ public class TrainerService {
     // Trainer Service class should support possibility to create/update/select Trainer profile.
     @Transactional
     public Trainer save(Trainer newTrainer){
+        if (null == newTrainer){
+            throw new RuntimeException("Trainer cannot be null");
+        }
         newTrainer.setUser(userService.registerUser(newTrainer.getUser()));
         LOGGER.info("Creating (persisting) trainer: " + newTrainer);
         return trainerRepository.save(newTrainer);
@@ -47,6 +51,12 @@ public class TrainerService {
     public Optional<Trainer> select(Long trainerId){
         LOGGER.info("Getting trainer");
         return trainerRepository.findById(trainerId);
+    }
+
+    @Transactional
+    public List<Trainer> getAll(){
+        LOGGER.info("Getting all trainers");
+        return trainerRepository.findAll();
     }
 
     @PostConstruct
