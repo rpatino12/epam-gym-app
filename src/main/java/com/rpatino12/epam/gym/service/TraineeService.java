@@ -75,6 +75,12 @@ public class TraineeService {
         return traineeRepository.findAll();
     }
 
+    @Transactional
+    public Optional<Trainee> getByUsername(String username){
+        LOGGER.info("Searching trainee: " + username);
+        return traineeRepository.findTraineeByUserUsername(username);
+    }
+
     @PostConstruct
     public void init(){
         LOGGER.info("Starting TraineeService");

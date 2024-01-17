@@ -34,6 +34,12 @@ public class TrainerRestController {
                 .map(trainer -> new ResponseEntity<>(trainer, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+    @GetMapping("/username/{username}")
+    public ResponseEntity<Trainer> getTrainerByUsername(@PathVariable("username") String username){
+        return trainerService.getByUsername(username)
+                .map(trainer -> new ResponseEntity<>(trainer, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 
     // Create trainer method (POST)
     @PostMapping("/save")

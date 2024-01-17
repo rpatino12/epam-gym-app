@@ -35,6 +35,13 @@ public class TraineeRestController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/username/{username}")
+    public ResponseEntity<Trainee> getTraineeByUsername(@PathVariable("username") String username){
+        return traineeService.getByUsername(username)
+                .map(trainee -> new ResponseEntity<>(trainee, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @PostMapping("/save")
     public ResponseEntity<Trainee> createTrainee(@RequestBody Trainee trainee){
         return new ResponseEntity<>(traineeService.save(trainee), HttpStatus.CREATED);

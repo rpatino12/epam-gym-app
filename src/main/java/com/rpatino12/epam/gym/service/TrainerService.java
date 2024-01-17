@@ -49,7 +49,7 @@ public class TrainerService {
 
     @Transactional
     public Optional<Trainer> select(Long trainerId){
-        LOGGER.info("Getting trainer");
+        LOGGER.info("Getting trainer " + trainerId);
         return trainerRepository.findById(trainerId);
     }
 
@@ -57,6 +57,12 @@ public class TrainerService {
     public List<Trainer> getAll(){
         LOGGER.info("Getting all trainers");
         return trainerRepository.findAll();
+    }
+
+    @Transactional
+    public Optional<Trainer> getByUsername(String username){
+        LOGGER.info("Searching trainer: " + username);
+        return trainerRepository.findTrainerByUserUsername(username);
     }
 
     @PostConstruct
