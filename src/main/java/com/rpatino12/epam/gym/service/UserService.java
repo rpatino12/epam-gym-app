@@ -65,6 +65,18 @@ public class UserService {
     }
 
     @Transactional
+    public User updateUserPassword(String newPassword, Long userId){
+        LOGGER.info("Updating user password");
+        return userRepository.findById(userId)
+                .map(
+                        user -> {
+                            user.setPassword(newPassword);
+                            return userRepository.save(user);
+                        }
+                ).get();
+    }
+
+    @Transactional
     private String generateUsername(String firstName, String lastName) {
         String baseUsername = firstName + "." + lastName;
         String username = baseUsername;

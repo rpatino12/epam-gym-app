@@ -81,6 +81,30 @@ public class TraineeService {
         return traineeRepository.findTraineeByUserUsername(username);
     }
 
+    @Transactional
+    public String updatePassword(String username, String oldPassword, String newPassword){
+        LOGGER.info("Updating trainee password");
+        Trainee trainee = this.getByUsername(username).orElse(new Trainee());
+        String result = "";
+        if (null==trainee.getUser() || !oldPassword.equals(trainee.getUser().getPassword())){
+            result = "Wrong username or password";
+            LOGGER.error(result);
+        } else {
+            if (oldPassword.equals(newPassword)) {
+                result = "New password cannot be the same as old password";
+                LOGGER.error(result);
+            } else if (newPassword.isEmpty()) {
+                result = "New password cannot be empty, please enter new password";
+                LOGGER.error(result);
+            } else {
+                trainee.setUser(userService.updateUserPassword(newPassword, trainee.getUser().getId()));
+                result = "Password updated";
+                LOGGER.info(result);
+            }
+        }
+        return result;
+    }
+
     @PostConstruct
     public void init(){
         LOGGER.info("Starting TraineeService");
