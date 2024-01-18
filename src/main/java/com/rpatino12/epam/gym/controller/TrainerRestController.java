@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -51,5 +52,20 @@ public class TrainerRestController {
     @PostMapping("/update/{id}")
     public ResponseEntity<Trainer> updateTrainer(@RequestBody Trainer newTrainer, @PathVariable("id") long trainerId){
         return new ResponseEntity<>(trainerService.update(newTrainer, trainerId), HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("/update-password")
+    public ResponseEntity<String> updatePassword(
+            @RequestHeader(name = "username") String username,
+            @RequestHeader(name = "password") String password,
+            @RequestHeader(name = "newPassword") String newPassword){
+        String updatedStatus = trainerService.updatePassword(username, password, newPassword);
+        if (updatedStatus.equals("Password updated")){
+            return new ResponseEntity<>(updatedStatus, HttpStatus.ACCEPTED);
+        } else if (updatedStatus.equals("Wrong username or password")) {
+            return new ResponseEntity<>(updatedStatus, HttpStatus.UNAUTHORIZED);
+        } else {
+            return new ResponseEntity<>(updatedStatus, HttpStatus.BAD_REQUEST);
+        }
     }
 }
