@@ -77,6 +77,18 @@ public class UserService {
     }
 
     @Transactional
+    public User updateStatus(boolean isActive, Long userId){
+        LOGGER.info("Updating user status");
+        return userRepository.findById(userId)
+                .map(
+                        user -> {
+                            user.setIsActive(isActive);
+                            return userRepository.save(user);
+                        }
+                ).get();
+    }
+
+    @Transactional
     private String generateUsername(String firstName, String lastName) {
         String baseUsername = firstName + "." + lastName;
         String username = baseUsername;

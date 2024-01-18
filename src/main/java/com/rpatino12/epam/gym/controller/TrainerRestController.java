@@ -68,4 +68,16 @@ public class TrainerRestController {
             return new ResponseEntity<>(updatedStatus, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/activate")
+    public ResponseEntity<String> updateStatus(
+            @RequestHeader(name = "username") String username,
+            @RequestHeader(name = "password") String password) {
+        String activate = trainerService.updateActiveStatus(username, password);
+        if (activate.equals("Wrong username or password")){
+            return new ResponseEntity<>(activate, HttpStatus.UNAUTHORIZED);
+        } else {
+            return new ResponseEntity<>(activate, HttpStatus.ACCEPTED);
+        }
+    }
 }

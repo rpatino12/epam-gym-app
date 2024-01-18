@@ -105,6 +105,27 @@ public class TraineeService {
         return result;
     }
 
+    @Transactional
+    public String updateActiveStatus(String username, String password){
+        Trainee trainee = this.getByUsername(username).orElse(new Trainee());
+        String result = "";
+        if (null==trainee.getUser() || !password.equals(trainee.getUser().getPassword())){
+            result = "Wrong username or password";
+            LOGGER.error(result);
+        } else {
+            if (trainee.getUser().getIsActive()){
+                trainee.setUser(userService.updateStatus(false, trainee.getUser().getId()));
+                result = "User deactivated";
+                LOGGER.info(result);
+            } else {
+                trainee.setUser(userService.updateStatus(true, trainee.getUser().getId()));
+                result = "User activated";
+                LOGGER.info(result);
+            }
+        }
+        return result;
+    }
+
     @PostConstruct
     public void init(){
         LOGGER.info("Starting TraineeService");

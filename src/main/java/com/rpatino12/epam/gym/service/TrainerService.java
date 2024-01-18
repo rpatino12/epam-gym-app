@@ -89,6 +89,27 @@ public class TrainerService {
         return result;
     }
 
+    @Transactional
+    public String updateActiveStatus(String username, String password){
+        Trainer trainer = this.getByUsername(username).orElse(new Trainer());
+        String result = "";
+        if (null==trainer.getUser() || !password.equals(trainer.getUser().getPassword())){
+            result = "Wrong username or password";
+            LOGGER.error(result);
+        } else {
+            if (trainer.getUser().getIsActive()){
+                trainer.setUser(userService.updateStatus(false, trainer.getUser().getId()));
+                result = "User deactivated";
+                LOGGER.info(result);
+            } else {
+                trainer.setUser(userService.updateStatus(true, trainer.getUser().getId()));
+                result = "User activated";
+                LOGGER.info(result);
+            }
+        }
+        return result;
+    }
+
     @PostConstruct
     public void init(){
         LOGGER.info("Starting TrainerService");
