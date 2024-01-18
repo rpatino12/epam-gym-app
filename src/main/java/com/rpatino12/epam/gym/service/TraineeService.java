@@ -64,6 +64,19 @@ public class TraineeService {
     }
 
     @Transactional
+    public boolean deleteByUsername(String username){
+        LOGGER.info("Deleting trainee " + username);
+        try {
+            traineeRepository.deleteByUserUsername(username);
+            LOGGER.info("Delete successful");
+            return true;
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.info("Couldn't delete trainee");
+            return false;
+        }
+    }
+
+    @Transactional
     public Optional<Trainee> select(Long traineeId){
         LOGGER.info("Getting trainee " + traineeId);
         return traineeRepository.findById(traineeId);

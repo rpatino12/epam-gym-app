@@ -57,6 +57,15 @@ public class TraineeRestController {
         }
     }
 
+    @DeleteMapping("/delete-by-username/{username}")
+    public ResponseEntity deleteTraineeByUsername(@PathVariable(name = "username") String username){
+        if (traineeService.deleteByUsername(username)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/update/{id}")
     public ResponseEntity<Trainee> updateTrainee(@RequestBody Trainee newTrainee, @PathVariable("id") long traineeId){
         return new ResponseEntity<>(traineeService.update(newTrainee, traineeId), HttpStatus.ACCEPTED);
