@@ -40,6 +40,18 @@ public class TrainingService {
         return trainingRepository.findAll();
     }
 
+    @Transactional
+    public Optional<List<Training>> getByTraineeUsername(String username){
+        LOGGER.info("Getting " + username + " trainings: ");
+        return trainingRepository.findTrainingByTraineeUserUsername(username);
+    }
+
+    @Transactional
+    public Optional<List<Training>> getByTrainerUsername(String username){
+        LOGGER.info("Getting " + username + " trainings: ");
+        return trainingRepository.findTrainingByTrainerUserUsername(username);
+    }
+
     @PostConstruct
     public void init(){
         LOGGER.info("Starting TrainingService");

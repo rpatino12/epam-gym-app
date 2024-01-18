@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,6 +33,22 @@ public class TrainingRestController {
         return trainingService.select(trainingId)
                 .map(training -> new ResponseEntity<>(training, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/trainee-username/{username}")
+    public ResponseEntity<List<Training>> getByTrainee(@PathVariable(name = "username") String username){
+        List<Training> trainings = trainingService.getByTraineeUsername(username).orElse(new ArrayList<>());
+        return trainings.isEmpty() ?
+                new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(trainings, HttpStatus.OK);
+    }
+
+    @GetMapping("/trainer-username/{username}")
+    public ResponseEntity<List<Training>> getByTrainer(@PathVariable(name = "username") String username){
+        List<Training> trainings = trainingService.getByTrainerUsername(username).orElse(new ArrayList<>());
+        return trainings.isEmpty() ?
+                new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(trainings, HttpStatus.OK);
     }
 
     // Create training method (POST)
