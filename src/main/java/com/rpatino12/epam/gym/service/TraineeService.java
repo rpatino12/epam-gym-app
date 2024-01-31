@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,6 +27,9 @@ public class TraineeService {
     // Trainee Service class should support possibility to create/update/delete/select Trainee profile.
     @Transactional
     public Trainee save(Trainee newTrainee){
+        if (null == newTrainee){
+            throw new RuntimeException("Trainee cannot be null");
+        }
         newTrainee.setUser(userService.registerUser(newTrainee.getUser()));
         LOGGER.info("Creating (persisting) trainee: " + newTrainee);
         return traineeRepository.save(newTrainee);
@@ -48,7 +52,7 @@ public class TraineeService {
 
     @Transactional
     public boolean delete(Long traineeId){
-        LOGGER.info("Deleting trainee");
+        LOGGER.info("Deleting trainee " + traineeId);
         try {
             traineeRepository.deleteById(traineeId);
             LOGGER.info("Delete successful");
@@ -60,9 +64,79 @@ public class TraineeService {
     }
 
     @Transactional
+    public boolean deleteByUsername(String username){
+        LOGGER.info("Deleting trainee " + username);
+        try {
+            traineeRepository.deleteByUserUsername(username);
+            LOGGER.info("Delete successful");
+            return true;
+        } catch (EmptyResultDataAccessException e) {
+            LOGGER.info("Couldn't delete trainee");
+            return false;
+        }
+    }
+
+    @Transactional
     public Optional<Trainee> select(Long traineeId){
-        LOGGER.info("Getting trainee");
+        LOGGER.info("Getting trainee " + traineeId);
         return traineeRepository.findById(traineeId);
+    }
+
+    @Transactional
+    public List<Trainee> getAll(){
+        LOGGER.info("Getting all trainees");
+        return traineeRepository.findAll();
+    }
+
+    @Transactional
+    public Optional<Trainee> getByUsername(String username){
+        LOGGER.info("Searching trainee: " + username);
+        return traineeRepository.findTraineeByUserUsername(username);
+    }
+
+    @Transactional
+    public String updatePassword(String username, String oldPassword, String newPassword){
+        LOGGER.info("Updating trainee password");
+        Trainee trainee = this.getByUsername(username).orElse(new Trainee());
+        String result = "";
+        if (null==trainee.getUser() || !oldPassword.equals(trainee.getUser().getPassword())){
+            result = "Wrong username or password";
+            LOGGER.error(result);
+        } else {
+            if (oldPassword.equals(newPassword)) {
+                result = "New password cannot be the same as old password";
+                LOGGER.error(result);
+            } else if (newPassword.isEmpty()) {
+                result = "New password cannot be empty, please enter new password";
+                LOGGER.error(result);
+            } else {
+                trainee.setUser(userService.updateUserPassword(newPassword, trainee.getUser().getId()));
+                result = "Password updated";
+                LOGGER.info(result);
+            }
+        }
+        return result;
+    }
+
+    @Transactional
+    public String updateActiveStatus(String username, String password){
+        Trainee trainee = this.getByUsername(username).orElse(new Trainee());
+        String result = "";
+        if (null==trainee.getUser() || !password.equals(trainee.getUser().getPassword())){
+            result = "Wrong username or password";
+            LOGGER.error(result);
+        } else {
+            if (trainee.getUser().getIsActive()){
+                trainee.setUser(userService.updateStatus(false, trainee.getUser().getId()));
+                result = "User deactivated";
+                LOGGER.info(result);
+            } else {
+                trainee.setUser(userService.updateStatus(true, trainee.getUser().getId()));
+                result = "User activated";
+                LOGGER.info(result);
+            }
+        }
+        return result;
     }
 
     @PostConstruct

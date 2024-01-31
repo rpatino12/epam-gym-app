@@ -3,6 +3,7 @@ package com.rpatino12.epam.gym.service;
 import com.rpatino12.epam.gym.dao.UserRepository;
 import com.rpatino12.epam.gym.model.User;
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    @Transactional
     public User registerUser(User user){
         String username = generateUsername(user.getFirstName(), user.getLastName());
         String password = generateRandomPassword();
@@ -34,11 +36,19 @@ public class UserService {
         return userRepository.save(newUser);
     }
 
+    @Transactional
     public Optional<User> getUser(Long userId){
         LOGGER.info("Getting user");
         return userRepository.findById(userId);
     }
 
+    @Transactional
+    public Optional<User> getUserByUsername(String username){
+        LOGGER.info("Searching user: " + username);
+        return userRepository.findByUsername(username);
+    }
+
+    @Transactional
     public User updateUser(User newUser, Long userId){
         LOGGER.info("Updating user: \nNewUser: " + newUser + "Id: " + userId);
         return userRepository.findById(userId)
@@ -54,6 +64,31 @@ public class UserService {
                 ).get();
     }
 
+    @Transactional
+    public User updateUserPassword(String newPassword, Long userId){
+        LOGGER.info("Updating user password");
+        return userRepository.findById(userId)
+                .map(
+                        user -> {
+                            user.setPassword(newPassword);
+                            return userRepository.save(user);
+                        }
+                ).get();
+    }
+
+    @Transactional
+    public User updateStatus(boolean isActive, Long userId){
+        LOGGER.info("Updating user status");
+        return userRepository.findById(userId)
+                .map(
+                        user -> {
+                            user.setIsActive(isActive);
+                            return userRepository.save(user);
+                        }
+                ).get();
+    }
+
+    @Transactional
     private String generateUsername(String firstName, String lastName) {
         String baseUsername = firstName + "." + lastName;
         String username = baseUsername;
