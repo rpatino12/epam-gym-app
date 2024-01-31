@@ -1,6 +1,6 @@
 package com.rpatino12.epam.gym.service;
 
-import com.rpatino12.epam.gym.dao.TrainingRepository;
+import com.rpatino12.epam.gym.repo.TrainingRepository;
 import com.rpatino12.epam.gym.model.Training;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
