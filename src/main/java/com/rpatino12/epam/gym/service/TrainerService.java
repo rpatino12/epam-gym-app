@@ -4,19 +4,18 @@ import com.rpatino12.epam.gym.repo.TrainerRepository;
 import com.rpatino12.epam.gym.model.Trainer;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class TrainerService {
 
     private final TrainerRepository trainerRepository;
     private final UserService userService;
-    private static final Log LOGGER = LogFactory.getLog(TrainerService.class);
 
     public TrainerService(TrainerRepository trainerRepository, UserService userService) {
         this.trainerRepository = trainerRepository;
@@ -30,14 +29,14 @@ public class TrainerService {
             throw new RuntimeException("Trainer cannot be null");
         }
         newTrainer.setUser(userService.registerUser(newTrainer.getUser()));
-        LOGGER.info("Creating trainer: " + newTrainer);
+        log.info("Creating trainer: " + newTrainer);
         return trainerRepository.save(newTrainer);
     }
 
     @Transactional
     public Trainer update(Trainer newTrainer, Long trainerId){
         userService.updateUser(newTrainer.getUser(), newTrainer.getUser().getId());
-        LOGGER.info("Updating trainer: Id=" + trainerId + "\nNewTrainer: " + newTrainer);
+        log.info("Updating trainer: Id=" + trainerId + "\nNewTrainer: " + newTrainer);
         return trainerRepository.findById(trainerId)
                 .map(
                         trainer -> {
@@ -49,41 +48,41 @@ public class TrainerService {
 
     @Transactional
     public Optional<Trainer> select(Long trainerId){
-        LOGGER.info("Getting trainer " + trainerId);
+        log.info("Getting trainer " + trainerId);
         return trainerRepository.findById(trainerId);
     }
 
     @Transactional
     public List<Trainer> getAll(){
-        LOGGER.info("Getting all trainers");
+        log.info("Getting all trainers");
         return trainerRepository.findAll();
     }
 
     @Transactional
     public Optional<Trainer> getByUsername(String username){
-        LOGGER.info("Searching trainer: " + username);
+        log.info("Searching trainer: " + username);
         return trainerRepository.findTrainerByUserUsername(username);
     }
 
     @Transactional
     public String updatePassword(String username, String oldPassword, String newPassword){
-        LOGGER.info("Updating trainer password");
+        log.info("Updating trainer password");
         Trainer trainer = this.getByUsername(username).orElse(new Trainer());
         String result = "";
         if (null==trainer.getUser() || !oldPassword.equals(trainer.getUser().getPassword())){
             result = "Wrong username or password";
-            LOGGER.error(result);
+            log.error(result);
         } else {
             if (oldPassword.equals(newPassword)) {
                 result = "New password cannot be the same as old password";
-                LOGGER.error(result);
+                log.error(result);
             } else if (newPassword.isEmpty()) {
                 result = "New password cannot be empty, please enter new password";
-                LOGGER.error(result);
+                log.error(result);
             } else {
                 trainer.setUser(userService.updateUserPassword(newPassword, trainer.getUser().getId()));
                 result = "Password updated";
-                LOGGER.info(result);
+                log.info(result);
             }
         }
         return result;
@@ -95,16 +94,16 @@ public class TrainerService {
         String result = "";
         if (null==trainer.getUser() || !password.equals(trainer.getUser().getPassword())){
             result = "Wrong username or password";
-            LOGGER.error(result);
+            log.error(result);
         } else {
             if (trainer.getUser().getIsActive()){
                 trainer.setUser(userService.updateStatus(false, trainer.getUser().getId()));
                 result = "User deactivated";
-                LOGGER.info(result);
+                log.info(result);
             } else {
                 trainer.setUser(userService.updateStatus(true, trainer.getUser().getId()));
                 result = "User activated";
-                LOGGER.info(result);
+                log.info(result);
             }
         }
         return result;
@@ -112,6 +111,6 @@ public class TrainerService {
 
     @PostConstruct
     public void init(){
-        LOGGER.info("Starting TrainerService");
+        log.info("Starting TrainerService");
     }
 }

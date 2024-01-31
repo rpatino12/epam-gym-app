@@ -4,17 +4,16 @@ import com.rpatino12.epam.gym.repo.UserRepository;
 import com.rpatino12.epam.gym.model.User;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
-    private static final Log LOGGER = LogFactory.getLog(UserService.class);
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -32,25 +31,25 @@ public class UserService {
         newUser.setPassword(password);
         newUser.setIsActive(user.getIsActive());
 
-        LOGGER.info("Creating user: " + newUser);
+        log.info("Creating user: " + newUser);
         return userRepository.save(newUser);
     }
 
     @Transactional
     public Optional<User> getUser(Long userId){
-        LOGGER.info("Getting user");
+        log.info("Getting user");
         return userRepository.findById(userId);
     }
 
     @Transactional
     public Optional<User> getUserByUsername(String username){
-        LOGGER.info("Searching user: " + username);
+        log.info("Searching user: " + username);
         return userRepository.findByUsername(username);
     }
 
     @Transactional
     public User updateUser(User newUser, Long userId){
-        LOGGER.info("Updating user: Id=" + userId + "\nNewUser: " + newUser);
+        log.info("Updating user: Id=" + userId + "\nNewUser: " + newUser);
         return userRepository.findById(userId)
                 .map(
                         user -> {
@@ -66,7 +65,7 @@ public class UserService {
 
     @Transactional
     public User updateUserPassword(String newPassword, Long userId){
-        LOGGER.info("Updating user password");
+        log.info("Updating user password");
         return userRepository.findById(userId)
                 .map(
                         user -> {
@@ -78,7 +77,7 @@ public class UserService {
 
     @Transactional
     public User updateStatus(boolean isActive, Long userId){
-        LOGGER.info("Updating user status");
+        log.info("Updating user status");
         return userRepository.findById(userId)
                 .map(
                         user -> {
@@ -115,6 +114,6 @@ public class UserService {
 
     @PostConstruct
     public void init(){
-        LOGGER.info("Starting UserService");
+        log.info("Starting UserService");
     }
 }
