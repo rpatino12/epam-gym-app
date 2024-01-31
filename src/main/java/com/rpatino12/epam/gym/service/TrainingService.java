@@ -24,7 +24,7 @@ public class TrainingService {
     // Training Service class should support possibility to create/select Training profile.
     @Transactional
     public Training save(Training training){
-        LOGGER.info("Creating (persisting) training: " + training);
+        LOGGER.info("Creating training: " + training);
         return trainingRepository.save(training);
     }
 

@@ -32,7 +32,7 @@ public class UserService {
         newUser.setPassword(password);
         newUser.setIsActive(user.getIsActive());
 
-        LOGGER.info("Creating (persisting) user: " + newUser);
+        LOGGER.info("Creating user: " + newUser);
         return userRepository.save(newUser);
     }
 
@@ -50,7 +50,7 @@ public class UserService {
 
     @Transactional
     public User updateUser(User newUser, Long userId){
-        LOGGER.info("Updating user: \nNewUser: " + newUser + "Id: " + userId);
+        LOGGER.info("Updating user: Id=" + userId + "\nNewUser: " + newUser);
         return userRepository.findById(userId)
                 .map(
                         user -> {

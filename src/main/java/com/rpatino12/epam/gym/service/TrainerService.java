@@ -30,14 +30,14 @@ public class TrainerService {
             throw new RuntimeException("Trainer cannot be null");
         }
         newTrainer.setUser(userService.registerUser(newTrainer.getUser()));
-        LOGGER.info("Creating (persisting) trainer: " + newTrainer);
+        LOGGER.info("Creating trainer: " + newTrainer);
         return trainerRepository.save(newTrainer);
     }
 
     @Transactional
     public Trainer update(Trainer newTrainer, Long trainerId){
         userService.updateUser(newTrainer.getUser(), newTrainer.getUser().getId());
-        LOGGER.info("Updating trainer: \nNewTrainer: " + newTrainer + "\nId: " + trainerId);
+        LOGGER.info("Updating trainer: Id=" + trainerId + "\nNewTrainer: " + newTrainer);
         return trainerRepository.findById(trainerId)
                 .map(
                         trainer -> {

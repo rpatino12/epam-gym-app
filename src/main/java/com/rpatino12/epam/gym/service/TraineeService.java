@@ -6,7 +6,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,14 +30,14 @@ public class TraineeService {
             throw new RuntimeException("Trainee cannot be null");
         }
         newTrainee.setUser(userService.registerUser(newTrainee.getUser()));
-        LOGGER.info("Creating (persisting) trainee: " + newTrainee);
+        LOGGER.info("Creating trainee: " + newTrainee);
         return traineeRepository.save(newTrainee);
     }
 
     @Transactional
     public Trainee update(Trainee newTrainee, Long traineeId) {
         userService.updateUser(newTrainee.getUser(), newTrainee.getUser().getId());
-        LOGGER.info("Updating trainee: \nNewTrainee: " + newTrainee + "Id: " + traineeId);
+        LOGGER.info("Updating trainee: Id=" + traineeId + "  \nNewTrainee: " + newTrainee);
         return traineeRepository.findById(traineeId)
                 .map(
                         trainee -> {
@@ -52,28 +51,28 @@ public class TraineeService {
 
     @Transactional
     public boolean delete(Long traineeId){
+        boolean isDeleteSuccessful = false;
         LOGGER.info("Deleting trainee " + traineeId);
-        try {
+        Optional<Trainee> optionalTrainee = traineeRepository.findById(traineeId);
+        if (optionalTrainee.isPresent()){
             traineeRepository.deleteById(traineeId);
-            LOGGER.info("Delete successful");
-            return true;
-        } catch (EmptyResultDataAccessException e) {
-            LOGGER.info("Couldn't delete trainee");
-            return false;
+            isDeleteSuccessful = !traineeRepository.existsById(traineeId);
         }
+        LOGGER.info(isDeleteSuccessful?"Delete successful":"Couldn't delete trainee");
+        return isDeleteSuccessful;
     }
 
     @Transactional
     public boolean deleteByUsername(String username){
+        boolean isDeleteSuccessful = false;
         LOGGER.info("Deleting trainee " + username);
-        try {
+        Optional<Trainee> optionalTrainee = this.getByUsername(username);
+        if (optionalTrainee.isPresent()){
             traineeRepository.deleteByUserUsername(username);
-            LOGGER.info("Delete successful");
-            return true;
-        } catch (EmptyResultDataAccessException e) {
-            LOGGER.info("Couldn't delete trainee");
-            return false;
+            isDeleteSuccessful = true;
         }
+        LOGGER.info(isDeleteSuccessful?"Delete successful":"Couldn't delete trainee");
+        return isDeleteSuccessful;
     }
 
     @Transactional
