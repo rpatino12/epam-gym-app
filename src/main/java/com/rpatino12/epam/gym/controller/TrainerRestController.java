@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,13 +58,13 @@ public class TrainerRestController {
     }
 
     // Update trainer method (POST)
-    @PostMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     @Operation(summary = "Update trainer information")
     public ResponseEntity<Trainer> updateTrainer(@RequestBody Trainer newTrainer, @PathVariable("id") long trainerId){
         return new ResponseEntity<>(trainerService.update(newTrainer, trainerId), HttpStatus.ACCEPTED);
     }
 
-    @PostMapping("/update-password")
+    @PutMapping("/update-password")
     @Operation(summary = "Update trainer password")
     public ResponseEntity<String> updatePassword(
             @RequestHeader(name = "username") String username,
@@ -78,7 +80,7 @@ public class TrainerRestController {
         }
     }
 
-    @PostMapping("/activate")
+    @PatchMapping("/activate")
     @Operation(summary = "Activate/Deactivate trainer")
     public ResponseEntity<String> updateStatus(
             @RequestHeader(name = "username") String username,

@@ -8,8 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,13 +77,13 @@ public class TraineeRestController {
         }
     }
 
-    @PostMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     @Operation(summary = "Update trainee information")
     public ResponseEntity<Trainee> updateTrainee(@RequestBody Trainee newTrainee, @PathVariable("id") long traineeId){
         return new ResponseEntity<>(traineeService.update(newTrainee, traineeId), HttpStatus.ACCEPTED);
     }
 
-    @PostMapping("/update-password")
+    @PutMapping("/update-password")
     @Operation(summary = "Update trainee password")
     public ResponseEntity<String> updatePassword(
             @RequestHeader(name = "username") String username,
@@ -97,7 +99,7 @@ public class TraineeRestController {
         }
     }
 
-    @PostMapping("/activate")
+    @PatchMapping("/activate")
     @Operation(summary = "Activate/Deactivate trainee")
     public ResponseEntity<String> updateStatus(
             @RequestHeader(name = "username") String username,
