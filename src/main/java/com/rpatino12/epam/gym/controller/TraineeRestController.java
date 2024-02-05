@@ -2,7 +2,9 @@ package com.rpatino12.epam.gym.controller;
 
 import com.rpatino12.epam.gym.dto.UserLogin;
 import com.rpatino12.epam.gym.model.Trainee;
+import com.rpatino12.epam.gym.model.User;
 import com.rpatino12.epam.gym.service.TraineeService;
+import com.rpatino12.epam.gym.util.DateUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.Date;
 import java.util.List;
 
 @RestController
@@ -25,9 +28,11 @@ import java.util.List;
 @Tag(name = "Trainee Controller", description = "Operations for creating, updating, retrieving and deleting trainees")
 public class TraineeRestController {
     private final TraineeService traineeService;
+    private final DateUtils dateUtils;
 
-    public TraineeRestController(TraineeService traineeService) {
+    public TraineeRestController(TraineeService traineeService, DateUtils dateUtils) {
         this.traineeService = traineeService;
+        this.dateUtils = dateUtils;
     }
 
     @GetMapping
@@ -54,8 +59,26 @@ public class TraineeRestController {
 
     @PostMapping("/save")
     @Operation(summary = "Create a new trainee")
-    public ResponseEntity<UserLogin> createTrainee(@RequestBody Trainee trainee){
-        return new ResponseEntity<>(traineeService.save(trainee), HttpStatus.CREATED);
+    public ResponseEntity<UserLogin> createTrainee(
+            @RequestHeader(name = "firstName") String firstName,
+            @RequestHeader(name = "lastName") String lastName,
+            @RequestHeader(name = "birthdate", required = false) String dateString,
+            @RequestHeader(name = "address", required = false) String address){
+        User newUser = new User();
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+
+        Trainee newTrainee = new Trainee();
+        newTrainee.setUser(newUser);
+        if (dateString != null){
+            Date birthdate = new Date(dateUtils.createDateFromDateString(dateString).getTime());
+            newTrainee.setDateOfBirth(birthdate);
+        }
+        if (address != null){
+            newTrainee.setAddress(address);
+        }
+
+        return new ResponseEntity<>(traineeService.save(newTrainee), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete/{id}")

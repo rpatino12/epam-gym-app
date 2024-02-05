@@ -2,6 +2,8 @@ package com.rpatino12.epam.gym.controller;
 
 import com.rpatino12.epam.gym.dto.UserLogin;
 import com.rpatino12.epam.gym.model.Trainer;
+import com.rpatino12.epam.gym.model.TrainingType;
+import com.rpatino12.epam.gym.model.User;
 import com.rpatino12.epam.gym.service.TrainerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -54,8 +56,26 @@ public class TrainerRestController {
     // Create trainer method (POST)
     @PostMapping("/save")
     @Operation(summary = "Create a new trainer")
-    public ResponseEntity<UserLogin> createTrainer(@RequestBody Trainer trainer){
-        return new ResponseEntity<>(trainerService.save(trainer), HttpStatus.CREATED);
+    public ResponseEntity<UserLogin> createTrainer(
+            @RequestHeader(name = "firstName") String firstName,
+            @RequestHeader(name = "lastName") String lastName,
+            @RequestHeader(name = "specializationId") long specializationId){
+        if (specializationId < 1 || specializationId > 5) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        User newUser = new User();
+        newUser.setFirstName(firstName);
+        newUser.setLastName(lastName);
+
+        TrainingType trainingType = new TrainingType();
+        trainingType.setTrainingTypeId(specializationId);
+
+        Trainer newTrainer = new Trainer();
+        newTrainer.setUser(newUser);
+        newTrainer.setSpecialization(trainingType);
+
+        return new ResponseEntity<>(trainerService.save(newTrainer), HttpStatus.CREATED);
     }
 
     // Update trainer method (POST)
