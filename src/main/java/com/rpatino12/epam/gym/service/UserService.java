@@ -88,6 +88,25 @@ public class UserService {
     }
 
     @Transactional
+    public boolean authenticate(String username, String password){
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        log.info("Authenticating user...");
+        if (optionalUser.isPresent()){
+            User user = optionalUser.get();
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)){
+                log.info("Login user " + username);
+                return true;
+            } else {
+                log.info("Wrong username or password");
+                return false;
+            }
+        } else {
+            log.info("Wrong username or password");
+            return false;
+        }
+    }
+
+    @Transactional
     private String generateUsername(String firstName, String lastName) {
         String baseUsername = firstName + "." + lastName;
         String username = baseUsername;
