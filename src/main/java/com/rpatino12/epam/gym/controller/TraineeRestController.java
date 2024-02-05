@@ -1,5 +1,6 @@
 package com.rpatino12.epam.gym.controller;
 
+import com.rpatino12.epam.gym.dto.UserLogin;
 import com.rpatino12.epam.gym.model.Trainee;
 import com.rpatino12.epam.gym.service.TraineeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,7 +54,7 @@ public class TraineeRestController {
 
     @PostMapping("/save")
     @Operation(summary = "Create a new trainee")
-    public ResponseEntity<Trainee> createTrainee(@RequestBody Trainee trainee){
+    public ResponseEntity<UserLogin> createTrainee(@RequestBody Trainee trainee){
         return new ResponseEntity<>(traineeService.save(trainee), HttpStatus.CREATED);
     }
 

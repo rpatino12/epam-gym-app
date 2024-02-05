@@ -1,5 +1,6 @@
 package com.rpatino12.epam.gym.controller;
 
+import com.rpatino12.epam.gym.dto.UserLogin;
 import com.rpatino12.epam.gym.model.Trainer;
 import com.rpatino12.epam.gym.service.TrainerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,7 +54,7 @@ public class TrainerRestController {
     // Create trainer method (POST)
     @PostMapping("/save")
     @Operation(summary = "Create a new trainer")
-    public ResponseEntity<Trainer> createTrainer(@RequestBody Trainer trainer){
+    public ResponseEntity<UserLogin> createTrainer(@RequestBody Trainer trainer){
         return new ResponseEntity<>(trainerService.save(trainer), HttpStatus.CREATED);
     }
 

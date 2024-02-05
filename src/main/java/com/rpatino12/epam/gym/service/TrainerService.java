@@ -1,5 +1,6 @@
 package com.rpatino12.epam.gym.service;
 
+import com.rpatino12.epam.gym.dto.UserLogin;
 import com.rpatino12.epam.gym.repo.TrainerRepository;
 import com.rpatino12.epam.gym.model.Trainer;
 import jakarta.annotation.PostConstruct;
@@ -24,13 +25,15 @@ public class TrainerService {
 
     // Trainer Service class should support possibility to create/update/select Trainer profile.
     @Transactional
-    public Trainer save(Trainer newTrainer){
+    public UserLogin save(Trainer newTrainer){
         if (null == newTrainer){
             throw new RuntimeException("Trainer cannot be null");
         }
         newTrainer.setUser(userService.registerUser(newTrainer.getUser()));
-        log.info("Creating trainer: " + newTrainer);
-        return trainerRepository.save(newTrainer);
+        Trainer trainer = trainerRepository.save(newTrainer);
+        log.info("Creating trainer: " + trainer);
+
+        return new UserLogin(trainer.getUser().getUsername(), trainer.getUser().getPassword());
     }
 
     @Transactional

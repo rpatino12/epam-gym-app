@@ -32,7 +32,7 @@ public class User implements Serializable {
     @Column(name = "PASSWORD")
     private String password;
     @Column(name = "IS_ACTIVE")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @Transient
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)

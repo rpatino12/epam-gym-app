@@ -1,5 +1,6 @@
 package com.rpatino12.epam.gym.service;
 
+import com.rpatino12.epam.gym.dto.UserLogin;
 import com.rpatino12.epam.gym.repo.TraineeRepository;
 import com.rpatino12.epam.gym.model.Trainee;
 import jakarta.annotation.PostConstruct;
@@ -24,13 +25,15 @@ public class TraineeService {
 
     // Trainee Service class should support possibility to create/update/delete/select Trainee profile.
     @Transactional
-    public Trainee save(Trainee newTrainee){
+    public UserLogin save(Trainee newTrainee){
         if (null == newTrainee){
             throw new RuntimeException("Trainee cannot be null");
         }
         newTrainee.setUser(userService.registerUser(newTrainee.getUser()));
-        log.info("Creating trainee: " + newTrainee);
-        return traineeRepository.save(newTrainee);
+        Trainee trainee = traineeRepository.save(newTrainee);
+        log.info("Creating trainee: " + trainee);
+
+        return new UserLogin(trainee.getUser().getUsername(), trainee.getUser().getPassword());
     }
 
     @Transactional

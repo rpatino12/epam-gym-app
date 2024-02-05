@@ -22,9 +22,10 @@ public class TrainingService {
 
     // Training Service class should support possibility to create/select Training profile.
     @Transactional
-    public Training save(Training training){
+    public Training save(Training newTraining){
+        Training training = trainingRepository.save(newTraining);
         log.info("Creating training: " + training);
-        return trainingRepository.save(training);
+        return training;
     }
 
     @Transactional
@@ -41,13 +42,13 @@ public class TrainingService {
 
     @Transactional
     public Optional<List<Training>> getByTraineeUsername(String username){
-        log.info("Getting " + username + " trainings: ");
+        log.info("Getting trainee " + username + " trainings: ");
         return trainingRepository.findTrainingByTraineeUserUsername(username);
     }
 
     @Transactional
     public Optional<List<Training>> getByTrainerUsername(String username){
-        log.info("Getting " + username + " trainings: ");
+        log.info("Getting trainer " + username + " trainings: ");
         return trainingRepository.findTrainingByTrainerUserUsername(username);
     }
 

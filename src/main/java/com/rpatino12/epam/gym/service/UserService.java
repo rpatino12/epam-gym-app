@@ -31,7 +31,7 @@ public class UserService {
         newUser.setPassword(password);
         newUser.setIsActive(user.getIsActive());
 
-        log.info("Creating user: " + newUser);
+        log.info("Creating user");
         return userRepository.save(newUser);
     }
 
@@ -49,7 +49,7 @@ public class UserService {
 
     @Transactional
     public User updateUser(User newUser, Long userId){
-        log.info("Updating user: Id=" + userId + "\nNewUser: " + newUser);
+        log.info("Updating user: Id=" + userId);
         return userRepository.findById(userId)
                 .map(
                         user -> {
