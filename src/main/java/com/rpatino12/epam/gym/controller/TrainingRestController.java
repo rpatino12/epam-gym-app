@@ -1,8 +1,10 @@
 package com.rpatino12.epam.gym.controller;
 
+import com.rpatino12.epam.gym.dto.TrainingTypeDto;
 import com.rpatino12.epam.gym.model.Training;
 import com.rpatino12.epam.gym.model.TrainingType;
 import com.rpatino12.epam.gym.service.TrainingService;
+import com.rpatino12.epam.gym.service.TrainingTypeService;
 import com.rpatino12.epam.gym.util.DateUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,10 +26,12 @@ import java.util.List;
 @Tag(name = "Training Controller", description = "Operations for creating and retrieving trainings")
 public class TrainingRestController {
     private final TrainingService trainingService;
+    private final TrainingTypeService trainingTypeService;
     private final DateUtils dateUtils;
 
-    public TrainingRestController(TrainingService trainingService, DateUtils dateUtils) {
+    public TrainingRestController(TrainingService trainingService, TrainingTypeService trainingTypeService, DateUtils dateUtils) {
         this.trainingService = trainingService;
+        this.trainingTypeService = trainingTypeService;
         this.dateUtils = dateUtils;
     }
 
@@ -94,5 +98,11 @@ public class TrainingRestController {
         } else {
             return new ResponseEntity<>("Trainee/Trainer not found", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/training-types")
+    @Operation(summary = "View all training types")
+    public ResponseEntity<List<TrainingTypeDto>> getTrainingTypes(){
+        return new ResponseEntity<>(trainingTypeService.getAll(), HttpStatus.OK);
     }
 }
