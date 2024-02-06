@@ -48,15 +48,13 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUser(User newUser, Long userId){
-        log.info("Updating user: Id=" + userId);
-        return userRepository.findById(userId)
+    public User updateUser(User newUser, String username){
+        log.info("Updating user");
+        return userRepository.findByUsername(username)
                 .map(
                         user -> {
                             user.setFirstName(newUser.getFirstName());
                             user.setLastName(newUser.getLastName());
-                            user.setUsername(generateUsername(newUser.getFirstName(), newUser.getLastName()));
-                            user.setPassword(generateRandomPassword());
                             user.setIsActive(newUser.getIsActive());
                             return userRepository.save(user);
                         }

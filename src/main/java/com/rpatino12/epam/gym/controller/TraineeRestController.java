@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -101,10 +100,36 @@ public class TraineeRestController {
         }
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/update")
     @Operation(summary = "Update trainee information")
-    public ResponseEntity<Trainee> updateTrainee(@RequestBody Trainee newTrainee, @PathVariable("id") long traineeId){
-        return new ResponseEntity<>(traineeService.update(newTrainee, traineeId), HttpStatus.ACCEPTED);
+    public ResponseEntity<Trainee> updateTrainee(
+            @RequestHeader(name = "username") String username,
+            @RequestHeader(name = "firstName") String firstName,
+            @RequestHeader(name = "lastName") String lastName,
+            @RequestHeader(name = "isActive") boolean isActive,
+            @RequestHeader(name = "birthdate", required = false) String dateString,
+            @RequestHeader(name = "address", required = false) String address){
+        if (traineeService.getByUsername(username).isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        User updatedUser = new User();
+        updatedUser.setFirstName(firstName);
+        updatedUser.setLastName(lastName);
+        updatedUser.setIsActive(isActive);
+
+        Trainee updatedTrainee = new Trainee();
+        updatedTrainee.setUser(updatedUser);
+
+        if (dateString != null){
+            Date birthdate = new Date(dateUtils.createDateFromDateString(dateString).getTime());
+            updatedTrainee.setDateOfBirth(birthdate);
+        }
+        if (address != null){
+            updatedTrainee.setAddress(address);
+        }
+
+        return new ResponseEntity<>(traineeService.update(updatedTrainee, username), HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/update-password")

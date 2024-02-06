@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -79,10 +78,34 @@ public class TrainerRestController {
     }
 
     // Update trainer method (POST)
-    @PutMapping("/update/{id}")
+    @PutMapping("/update")
     @Operation(summary = "Update trainer information")
-    public ResponseEntity<Trainer> updateTrainer(@RequestBody Trainer newTrainer, @PathVariable("id") long trainerId){
-        return new ResponseEntity<>(trainerService.update(newTrainer, trainerId), HttpStatus.ACCEPTED);
+    public ResponseEntity<Trainer> updateTrainer(
+            @RequestHeader(name = "username") String username,
+            @RequestHeader(name = "firstName") String firstName,
+            @RequestHeader(name = "lastName") String lastName,
+            @RequestHeader(name = "isActive") boolean isActive,
+            @RequestHeader(name = "specializationId") Long specializationId){
+        if (trainerService.getByUsername(username).isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (specializationId < 1 || specializationId > 5) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        User updatedUser = new User();
+        updatedUser.setFirstName(firstName);
+        updatedUser.setLastName(lastName);
+        updatedUser.setIsActive(isActive);
+
+        TrainingType trainingType = new TrainingType();
+        trainingType.setTrainingTypeId(specializationId);
+
+        Trainer updatedTrainer = new Trainer();
+        updatedTrainer.setUser(updatedUser);
+        updatedTrainer.setSpecialization(trainingType);
+
+        return new ResponseEntity<>(trainerService.update(updatedTrainer, username), HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/update-password")
