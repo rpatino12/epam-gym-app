@@ -7,6 +7,7 @@ import com.rpatino12.epam.gym.service.TraineeService;
 import com.rpatino12.epam.gym.util.DateUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/trainees")
 @Tag(name = "Trainee Controller", description = "Operations for creating, updating, retrieving and deleting trainees")
+@Slf4j
 public class TraineeRestController {
     private final TraineeService traineeService;
     private final DateUtils dateUtils;
@@ -37,12 +39,16 @@ public class TraineeRestController {
     @GetMapping
     @Operation(summary = "View all trainees")
     public ResponseEntity<List<Trainee>> getAll(){
+        log.info("Received GET request to /api/trainees");
+
         return new ResponseEntity<>(traineeService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Retrieve specific trainee with the supplied trainee Id")
     public ResponseEntity<Trainee> getTrainee(@PathVariable("id") long traineeId){
+        log.info("Received GET request to /api/trainees/{id} with parameter: {}", traineeId);
+
         return traineeService.select(traineeId)
                 .map(trainee -> new ResponseEntity<>(trainee, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -51,6 +57,8 @@ public class TraineeRestController {
     @GetMapping("/username/{username}")
     @Operation(summary = "Retrieve specific trainee with the supplied trainee username")
     public ResponseEntity<Trainee> getTraineeByUsername(@PathVariable("username") String username){
+        log.info("Received GET request to /api/trainees/username/{username} with parameter: {}", username);
+
         return traineeService.getByUsername(username)
                 .map(trainee -> new ResponseEntity<>(trainee, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -63,6 +71,8 @@ public class TraineeRestController {
             @RequestHeader(name = "lastName") String lastName,
             @RequestHeader(name = "birthdate", required = false) String dateString,
             @RequestHeader(name = "address", required = false) String address){
+        log.info("Received POST request to /api/trainees/save");
+
         User newUser = new User();
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);
@@ -83,6 +93,8 @@ public class TraineeRestController {
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Delete specific trainee with the supplied trainee Id")
     public ResponseEntity deleteTrainee(@PathVariable("id") long traineeId){
+        log.info("Received DELETE request to /api/trainees/delete/{id} with parameter: {}", traineeId);
+
         if (traineeService.delete(traineeId)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
@@ -93,6 +105,8 @@ public class TraineeRestController {
     @DeleteMapping("/delete-by-username/{username}")
     @Operation(summary = "Delete specific trainee with the supplied trainee username")
     public ResponseEntity deleteTraineeByUsername(@PathVariable(name = "username") String username){
+        log.info("Received DELETE request to /api/trainees/delete-by-username/{username} with parameter: {}", username);
+
         if (traineeService.deleteByUsername(username)){
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
@@ -109,6 +123,8 @@ public class TraineeRestController {
             @RequestHeader(name = "isActive") boolean isActive,
             @RequestHeader(name = "birthdate", required = false) String dateString,
             @RequestHeader(name = "address", required = false) String address){
+        log.info("Received PUT request to /api/trainees/update");
+
         if (traineeService.getByUsername(username).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -138,6 +154,8 @@ public class TraineeRestController {
             @RequestHeader(name = "username") String username,
             @RequestHeader(name = "password") String password,
             @RequestHeader(name = "newPassword") String newPassword){
+        log.info("Received PUT request to /api/trainees/update-password");
+
         String updateStatus = traineeService.updatePassword(username, password, newPassword);
         if (updateStatus.equals("Password updated")){
             return new ResponseEntity<>(updateStatus, HttpStatus.ACCEPTED);
@@ -153,6 +171,8 @@ public class TraineeRestController {
     public ResponseEntity<String> updateStatus(
             @RequestHeader(name = "username") String username,
             @RequestHeader(name = "password") String password) {
+        log.info("Received PATCH request to /api/trainees/activate");
+
         String activate = traineeService.updateActiveStatus(username, password);
         if (activate.equals("Wrong username or password")){
             return new ResponseEntity<>(activate, HttpStatus.UNAUTHORIZED);

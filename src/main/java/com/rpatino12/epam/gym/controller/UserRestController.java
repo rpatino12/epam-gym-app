@@ -3,6 +3,7 @@ package com.rpatino12.epam.gym.controller;
 import com.rpatino12.epam.gym.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "User Controller", description = "Operations for users login")
+@Slf4j
 public class UserRestController {
     private final UserService userService;
 
@@ -25,6 +27,8 @@ public class UserRestController {
     public ResponseEntity login(
             @RequestHeader(name = "username") String username,
             @RequestHeader(name = "password") String password) {
+        log.info("Received GET request to /api/users/login");
+
         if (userService.authenticate(username, password)){
             return new ResponseEntity<>("Welcome", HttpStatus.OK);
         } else {

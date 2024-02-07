@@ -7,6 +7,7 @@ import com.rpatino12.epam.gym.model.User;
 import com.rpatino12.epam.gym.service.TrainerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/trainers")
 @Tag(name = "Trainer Controller", description = "Operations for creating, updating and retrieving trainers")
+@Slf4j
 public class TrainerRestController {
     private final TrainerService trainerService;
 
@@ -34,12 +36,16 @@ public class TrainerRestController {
     @GetMapping
     @Operation(summary = "View all trainers")
     public ResponseEntity<List<Trainer>> getAll(){
+        log.info("Received GET request to /api/trainers");
+
         return new ResponseEntity<>(trainerService.getAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Retrieve specific trainer with the supplied trainer Id")
     public ResponseEntity<Trainer> getTrainer(@PathVariable("id") long trainerId){
+        log.info("Received GET request to /api/trainers/{id} with parameter: {}", trainerId);
+
         return trainerService.select(trainerId)
                 .map(trainer -> new ResponseEntity<>(trainer, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -47,6 +53,8 @@ public class TrainerRestController {
     @GetMapping("/username/{username}")
     @Operation(summary = "Retrieve specific trainer with the supplied trainer username")
     public ResponseEntity<Trainer> getTrainerByUsername(@PathVariable("username") String username){
+        log.info("Received GET request to /api/trainers/username/{username} with parameter: {}", username);
+
         return trainerService.getByUsername(username)
                 .map(trainer -> new ResponseEntity<>(trainer, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -59,6 +67,8 @@ public class TrainerRestController {
             @RequestHeader(name = "firstName") String firstName,
             @RequestHeader(name = "lastName") String lastName,
             @RequestHeader(name = "specializationId") long specializationId){
+        log.info("Received POST request to /api/trainers/save");
+
         if (specializationId < 1 || specializationId > 5) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -86,6 +96,8 @@ public class TrainerRestController {
             @RequestHeader(name = "lastName") String lastName,
             @RequestHeader(name = "isActive") boolean isActive,
             @RequestHeader(name = "specializationId") Long specializationId){
+        log.info("Received PUT request to /api/trainers/update");
+
         if (trainerService.getByUsername(username).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -114,6 +126,8 @@ public class TrainerRestController {
             @RequestHeader(name = "username") String username,
             @RequestHeader(name = "password") String password,
             @RequestHeader(name = "newPassword") String newPassword){
+        log.info("Received PUT request to /api/trainers/update-password");
+
         String updatedStatus = trainerService.updatePassword(username, password, newPassword);
         if (updatedStatus.equals("Password updated")){
             return new ResponseEntity<>(updatedStatus, HttpStatus.ACCEPTED);
@@ -129,6 +143,8 @@ public class TrainerRestController {
     public ResponseEntity<String> updateStatus(
             @RequestHeader(name = "username") String username,
             @RequestHeader(name = "password") String password) {
+        log.info("Received PATCH request to /api/trainers/activate");
+
         String activate = trainerService.updateActiveStatus(username, password);
         if (activate.equals("Wrong username or password")){
             return new ResponseEntity<>(activate, HttpStatus.UNAUTHORIZED);
