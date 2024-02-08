@@ -4,7 +4,6 @@ import com.rpatino12.epam.gym.dto.UserLogin;
 import com.rpatino12.epam.gym.model.Trainee;
 import com.rpatino12.epam.gym.model.User;
 import com.rpatino12.epam.gym.repo.TraineeRepository;
-import com.rpatino12.epam.gym.repo.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 class TraineeServiceTest {
@@ -56,7 +56,7 @@ class TraineeServiceTest {
     }
 
     @Test
-    @DisplayName("When getAll() should return all trainees list")
+    @DisplayName("getAll() return all trainees list")
     void getAll(){
         Mockito.doReturn(this.traineeList).when(traineeRepository).findAll();
         List<Trainee> trainees = traineeService.getAll();
@@ -67,6 +67,7 @@ class TraineeServiceTest {
     }
 
     @Test
+    @DisplayName("save() with given trainee return UserLogin object")
     void save() {
         Mockito.doReturn(trainee).when(traineeRepository).save(trainee);
         Mockito.doReturn(user).when(userService).registerUser(user);
@@ -78,20 +79,35 @@ class TraineeServiceTest {
     }
 
     @Test
+    @DisplayName("update() with given trainee and username return Trainee object")
     void update() {
+        Mockito.when(traineeRepository.save(any(Trainee.class))).thenReturn(trainee);
+        Mockito.when(traineeRepository.findTraineeByUserUsername(trainee.getUser().getUsername())).thenReturn(Optional.of(trainee));
+        Mockito.doReturn(user).when(userService).updateUser(user, user.getUsername());
 
+        Trainee newTrainee = new Trainee();
+        newTrainee.setTraineeId(trainee.getTraineeId());
+        newTrainee.setAddress(trainee.getAddress());
+        newTrainee.setDateOfBirth(trainee.getDateOfBirth());
+        newTrainee.setUser(trainee.getUser());
+
+        newTrainee = traineeService.update(newTrainee, newTrainee.getUser().getUsername());
+        assertNotNull(newTrainee);
+        assertEquals(newTrainee.getAddress(), trainee.getAddress());
     }
 
     @Test
+    @DisplayName("deleteByUsername() with given username return true")
     void deleteByUsername() {
-        traineeService.deleteByUsername(user.getUsername());
-        Optional<Trainee> optionalTrainee = traineeService.getByUsername(user.getUsername());
+        Mockito.doNothing().when(traineeRepository).deleteByUserUsername(user.getUsername());
+        Mockito.doReturn(Optional.of(trainee)).when(traineeRepository).findTraineeByUserUsername(user.getUsername());
+        boolean isTraineeDeleted = traineeService.deleteByUsername(user.getUsername());
 
-        assertEquals(Optional.empty(), optionalTrainee);
+        assertTrue(isTraineeDeleted);
     }
 
     @Test
-    @DisplayName("When getByUsername() with given username should return Trainee object")
+    @DisplayName("getByUsername() with given username return Optional Trainee object")
     void getByUsername() {
         Mockito.doReturn(Optional.of(trainee)).when(traineeRepository).findTraineeByUserUsername(user.getUsername());
         Optional<Trainee> optionalTrainee = traineeService.getByUsername(user.getUsername());
@@ -101,11 +117,33 @@ class TraineeServiceTest {
     }
 
     @Test
+    @DisplayName("updatePassword() with given username and passwords return update successful")
     void updatePassword() {
+        Mockito.doReturn(Optional.of(trainee)).when(traineeRepository).findTraineeByUserUsername(trainee.getUser().getUsername());
+        Mockito.doReturn(user).when(userService).updateUserPassword("newPassword", user.getId());
+
+        String updatePasswordResult = traineeService.updatePassword(user.getUsername(), user.getPassword(), "newPassword");
+        assertEquals("Password updated", updatePasswordResult);
     }
 
     @Test
+    @DisplayName("updatePassword() when newPassword is the same as oldPassword doesn't update")
+    void not_updatePassword() {
+        Mockito.doReturn(Optional.of(trainee)).when(traineeRepository).findTraineeByUserUsername(trainee.getUser().getUsername());
+
+        String updatePasswordResult = traineeService.updatePassword(user.getUsername(), user.getPassword(), "testPassword");
+        assertEquals("New password cannot be the same as old password", updatePasswordResult);
+    }
+
+    @Test
+    @DisplayName("updateActiveStatus() with given username and password activate/deactivate trainee")
     void updateActiveStatus() {
+        Mockito.doReturn(user).when(userService).updateStatus(false, user.getId());
+        Mockito.doReturn(Optional.of(trainee)).when(traineeRepository).findTraineeByUserUsername(user.getUsername());
+
+        String deactivated = traineeService.updateActiveStatus(user.getUsername(), user.getPassword());
+
+        assertEquals("User deactivated", deactivated);
     }
 
     private List<Trainee> getMockTrainees(int count){
