@@ -31,7 +31,7 @@ public class UserService {
         newUser.setPassword(password);
         newUser.setIsActive(user.getIsActive());
 
-        log.info("Creating user: " + newUser);
+        log.info("Creating user");
         return userRepository.save(newUser);
     }
 
@@ -48,15 +48,13 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUser(User newUser, Long userId){
-        log.info("Updating user: Id=" + userId + "\nNewUser: " + newUser);
-        return userRepository.findById(userId)
+    public User updateUser(User newUser, String username){
+        log.info("Updating user");
+        return userRepository.findByUsername(username)
                 .map(
                         user -> {
                             user.setFirstName(newUser.getFirstName());
                             user.setLastName(newUser.getLastName());
-                            user.setUsername(generateUsername(newUser.getFirstName(), newUser.getLastName()));
-                            user.setPassword(generateRandomPassword());
                             user.setIsActive(newUser.getIsActive());
                             return userRepository.save(user);
                         }
@@ -85,6 +83,25 @@ public class UserService {
                             return userRepository.save(user);
                         }
                 ).get();
+    }
+
+    @Transactional
+    public boolean authenticate(String username, String password){
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        log.info("Authenticating user...");
+        if (optionalUser.isPresent()){
+            User user = optionalUser.get();
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)){
+                log.info("Login user " + username);
+                return true;
+            } else {
+                log.info("Wrong username or password");
+                return false;
+            }
+        } else {
+            log.info("Wrong username or password");
+            return false;
+        }
     }
 
     @Transactional

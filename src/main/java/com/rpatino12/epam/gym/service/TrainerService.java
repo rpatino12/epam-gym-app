@@ -1,5 +1,7 @@
 package com.rpatino12.epam.gym.service;
 
+import com.rpatino12.epam.gym.dto.UserLogin;
+import com.rpatino12.epam.gym.model.User;
 import com.rpatino12.epam.gym.repo.TrainerRepository;
 import com.rpatino12.epam.gym.model.Trainer;
 import jakarta.annotation.PostConstruct;
@@ -24,26 +26,38 @@ public class TrainerService {
 
     // Trainer Service class should support possibility to create/update/select Trainer profile.
     @Transactional
-    public Trainer save(Trainer newTrainer){
+    public UserLogin save(Trainer newTrainer){
         if (null == newTrainer){
             throw new RuntimeException("Trainer cannot be null");
         }
         newTrainer.setUser(userService.registerUser(newTrainer.getUser()));
-        log.info("Creating trainer: " + newTrainer);
-        return trainerRepository.save(newTrainer);
+        Trainer trainer = trainerRepository.save(newTrainer);
+        log.info("Creating trainer: " + trainer);
+
+        return new UserLogin(trainer.getUser().getUsername(), trainer.getUser().getPassword());
     }
 
     @Transactional
-    public Trainer update(Trainer newTrainer, Long trainerId){
-        userService.updateUser(newTrainer.getUser(), newTrainer.getUser().getId());
-        log.info("Updating trainer: Id=" + trainerId + "\nNewTrainer: " + newTrainer);
-        return trainerRepository.findById(trainerId)
-                .map(
-                        trainer -> {
-                            trainer.setSpecialization(newTrainer.getSpecialization());
-                            return trainerRepository.save(trainer);
-                        }
-                ).get();
+    public Trainer update(Trainer updatedTrainer, String username){
+        User updatedUser = userService.updateUser(updatedTrainer.getUser(), username);
+
+        Trainer trainer = trainerRepository.findTrainerByUserUsername(username).get();
+        trainer.setSpecialization(updatedTrainer.getSpecialization());
+        trainer.setUser(updatedUser);
+
+        log.info("""
+                        Updating trainer {}:\s
+                        First Name: {}\s
+                        Last Name: {}\s
+                        Specialization Id: {}\s
+                        Is Active: {}""",
+                username,
+                updatedUser.getFirstName(),
+                updatedUser.getLastName(),
+                trainer.getSpecialization().getTrainingTypeId(),
+                updatedUser.getIsActive());
+
+        return trainerRepository.save(trainer);
     }
 
     @Transactional

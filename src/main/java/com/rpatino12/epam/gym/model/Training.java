@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,6 +43,27 @@ public class Training implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "TRAINEE_ID")
     private Trainee trainee;
+
+    @PrePersist
+    public void prePersist() {
+        setTypeName();
+    }
+
+    private void setTypeName(){
+        if (trainingType.getTrainingTypeId() == 1) {
+            trainingType.setTrainingTypeName(TrainingTypes.Fitness);
+        } else if (trainingType.getTrainingTypeId() == 2) {
+            trainingType.setTrainingTypeName(TrainingTypes.Yoga);
+        } else if (trainingType.getTrainingTypeId() == 3) {
+            trainingType.setTrainingTypeName(TrainingTypes.Zumba);
+        } else if (trainingType.getTrainingTypeId() == 4) {
+            trainingType.setTrainingTypeName(TrainingTypes.Stretching);
+        } else if (trainingType.getTrainingTypeId() == 5) {
+            trainingType.setTrainingTypeName(TrainingTypes.Resistance);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 
     @Override
     public String toString() {

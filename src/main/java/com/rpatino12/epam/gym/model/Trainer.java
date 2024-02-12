@@ -12,6 +12,8 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.Getter;
@@ -48,6 +50,32 @@ public class Trainer implements Serializable {
     @Transient
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Training> trainingsList = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist() {
+        setTypeName();
+    }
+
+    @PreUpdate
+    public void preUpdate(){
+        setTypeName();
+    }
+
+    private void setTypeName(){
+        if (specialization.getTrainingTypeId() == 1) {
+            specialization.setTrainingTypeName(TrainingTypes.Fitness);
+        } else if (specialization.getTrainingTypeId() == 2) {
+            specialization.setTrainingTypeName(TrainingTypes.Yoga);
+        } else if (specialization.getTrainingTypeId() == 3) {
+            specialization.setTrainingTypeName(TrainingTypes.Zumba);
+        } else if (specialization.getTrainingTypeId() == 4) {
+            specialization.setTrainingTypeName(TrainingTypes.Stretching);
+        } else if (specialization.getTrainingTypeId() == 5) {
+            specialization.setTrainingTypeName(TrainingTypes.Resistance);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 
     @Override
     public String toString() {

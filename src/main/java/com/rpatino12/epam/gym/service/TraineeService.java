@@ -1,5 +1,7 @@
 package com.rpatino12.epam.gym.service;
 
+import com.rpatino12.epam.gym.dto.UserLogin;
+import com.rpatino12.epam.gym.model.User;
 import com.rpatino12.epam.gym.repo.TraineeRepository;
 import com.rpatino12.epam.gym.model.Trainee;
 import jakarta.annotation.PostConstruct;
@@ -24,28 +26,45 @@ public class TraineeService {
 
     // Trainee Service class should support possibility to create/update/delete/select Trainee profile.
     @Transactional
-    public Trainee save(Trainee newTrainee){
+    public UserLogin save(Trainee newTrainee){
         if (null == newTrainee){
             throw new RuntimeException("Trainee cannot be null");
         }
         newTrainee.setUser(userService.registerUser(newTrainee.getUser()));
-        log.info("Creating trainee: " + newTrainee);
-        return traineeRepository.save(newTrainee);
+        Trainee trainee = traineeRepository.save(newTrainee);
+        log.info("Creating trainee: " + trainee);
+
+        return new UserLogin(trainee.getUser().getUsername(), trainee.getUser().getPassword());
     }
 
     @Transactional
-    public Trainee update(Trainee newTrainee, Long traineeId) {
-        userService.updateUser(newTrainee.getUser(), newTrainee.getUser().getId());
-        log.info("Updating trainee: Id=" + traineeId + "  \nNewTrainee: " + newTrainee);
-        return traineeRepository.findById(traineeId)
-                .map(
-                        trainee -> {
-                            trainee.setDateOfBirth(newTrainee.getDateOfBirth());
-                            trainee.setAddress(newTrainee.getAddress());
-                            trainee.setUser(newTrainee.getUser());
-                            return traineeRepository.save(trainee);
-                        }
-                ).get();
+    public Trainee update(Trainee updatedTrainee, String username) {
+        User updatedUser = userService.updateUser(updatedTrainee.getUser(), username);
+        log.info("""
+                        Updating trainee {}:\s
+                        First Name: {}\s
+                        Last Name: {}\s
+                        Birthdate: {}
+                        Address: {}\s
+                        Is Active: {}""",
+                username,
+                updatedUser.getFirstName(),
+                updatedUser.getLastName(),
+                updatedTrainee.getDateOfBirth()==null?"-":updatedTrainee.getDateOfBirth(),
+                updatedTrainee.getAddress()==null?"-":updatedTrainee.getAddress(),
+                updatedUser.getIsActive());
+
+        Trainee trainee = traineeRepository.findTraineeByUserUsername(username).get();
+
+        if (updatedTrainee.getDateOfBirth() != null){
+            trainee.setDateOfBirth(updatedTrainee.getDateOfBirth());
+        }
+        if (updatedTrainee.getAddress() != null){
+            trainee.setAddress(updatedTrainee.getAddress());
+        }
+        trainee.setUser(updatedUser);
+
+        return traineeRepository.save(trainee);
     }
 
     @Transactional

@@ -3,10 +3,11 @@ package com.rpatino12.epam.gym.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -27,7 +28,8 @@ public class TrainingType implements Serializable {
     @Column(name = "TRAINING_TYPE_ID")
     private Long trainingTypeId;
     @Column(name = "TRAINING_TYPE_NAME")
-    private String trainingTypeName;
+    @Enumerated(EnumType.STRING)
+    private TrainingTypes trainingTypeName;
 
     @Transient
     @OneToMany(mappedBy = "trainingType", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -36,6 +38,14 @@ public class TrainingType implements Serializable {
     @Transient
     @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Trainer> trainers = new ArrayList<>();
+
+    public TrainingType() {
+    }
+
+    public TrainingType(Long trainingTypeId, TrainingTypes trainingTypeName) {
+        this.trainingTypeId = trainingTypeId;
+        this.trainingTypeName = trainingTypeName;
+    }
 
     @Override
     public String toString() {
