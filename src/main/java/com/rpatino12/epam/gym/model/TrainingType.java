@@ -39,6 +39,14 @@ public class TrainingType implements Serializable {
     @OneToMany(mappedBy = "specialization", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Trainer> trainers = new ArrayList<>();
 
+    public TrainingType() {
+    }
+
+    public TrainingType(Long trainingTypeId, TrainingTypes trainingTypeName) {
+        this.trainingTypeId = trainingTypeId;
+        this.trainingTypeName = trainingTypeName;
+    }
+
     @Override
     public String toString() {
         return "TrainingType{" +

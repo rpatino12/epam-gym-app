@@ -98,7 +98,7 @@ class TrainerServiceTest {
     @DisplayName("getAll() return all trainers list")
     void getAll() {
         Mockito.doReturn(this.trainerList).when(trainerRepository).findAll();
-        List<Trainer> trainers = trainerRepository.findAll();
+        List<Trainer> trainers = trainerService.getAll();
 
         assertNotNull(trainers);
         assertEquals(4, trainers.size());
