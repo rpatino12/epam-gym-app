@@ -36,12 +36,6 @@ public class UserService {
     }
 
     @Transactional
-    public Optional<User> getUser(Long userId){
-        log.info("Getting user");
-        return userRepository.findById(userId);
-    }
-
-    @Transactional
     public Optional<User> getUserByUsername(String username){
         log.info("Searching user: " + username);
         return userRepository.findByUsername(username);

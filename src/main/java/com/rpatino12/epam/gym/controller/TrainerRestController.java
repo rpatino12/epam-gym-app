@@ -41,19 +41,10 @@ public class TrainerRestController {
         return new ResponseEntity<>(trainerService.getAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Retrieve specific trainer with the supplied trainer Id")
-    public ResponseEntity<Trainer> getTrainer(@PathVariable("id") long trainerId){
-        log.info("Received GET request to /api/trainers/{id} with parameter: {}", trainerId);
-
-        return trainerService.select(trainerId)
-                .map(trainer -> new ResponseEntity<>(trainer, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-    @GetMapping("/username/{username}")
+    @GetMapping("/{username}")
     @Operation(summary = "Retrieve specific trainer with the supplied trainer username")
     public ResponseEntity<Trainer> getTrainerByUsername(@PathVariable("username") String username){
-        log.info("Received GET request to /api/trainers/username/{username} with parameter: {}", username);
+        log.info("Received GET request to /api/trainers/{username} with parameter: {}", username);
 
         return trainerService.getByUsername(username)
                 .map(trainer -> new ResponseEntity<>(trainer, HttpStatus.OK))

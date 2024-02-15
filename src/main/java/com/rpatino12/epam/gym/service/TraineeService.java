@@ -68,19 +68,6 @@ public class TraineeService {
     }
 
     @Transactional
-    public boolean delete(Long traineeId){
-        boolean isDeleteSuccessful = false;
-        log.info("Deleting trainee " + traineeId);
-        Optional<Trainee> optionalTrainee = traineeRepository.findById(traineeId);
-        if (optionalTrainee.isPresent()){
-            traineeRepository.deleteById(traineeId);
-            isDeleteSuccessful = !traineeRepository.existsById(traineeId);
-        }
-        log.info(isDeleteSuccessful?"Delete successful":"Couldn't delete trainee");
-        return isDeleteSuccessful;
-    }
-
-    @Transactional
     public boolean deleteByUsername(String username){
         boolean isDeleteSuccessful = false;
         log.info("Deleting trainee " + username);
@@ -91,12 +78,6 @@ public class TraineeService {
         }
         log.info(isDeleteSuccessful?"Delete successful":"Couldn't delete trainee");
         return isDeleteSuccessful;
-    }
-
-    @Transactional
-    public Optional<Trainee> select(Long traineeId){
-        log.info("Getting trainee " + traineeId);
-        return traineeRepository.findById(traineeId);
     }
 
     @Transactional

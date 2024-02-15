@@ -61,12 +61,6 @@ public class TrainerService {
     }
 
     @Transactional
-    public Optional<Trainer> select(Long trainerId){
-        log.info("Getting trainer " + trainerId);
-        return trainerRepository.findById(trainerId);
-    }
-
-    @Transactional
     public List<Trainer> getAll(){
         log.info("Getting all trainers");
         return trainerRepository.findAll();

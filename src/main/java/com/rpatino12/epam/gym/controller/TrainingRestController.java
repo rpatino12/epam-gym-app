@@ -45,15 +45,6 @@ public class TrainingRestController {
 
         return new ResponseEntity<>(trainingService.getAll(), HttpStatus.OK);
     }
-    @GetMapping("/{id}")
-    @Operation(summary = "Retrieve specific training with the supplied training Id")
-    public ResponseEntity<Training> getTraining(@PathVariable("id") long trainingId){
-        log.info("Received GET request to /api/trainings/{id} with parameter: {}", trainingId);
-
-        return trainingService.select(trainingId)
-                .map(training -> new ResponseEntity<>(training, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
 
     @GetMapping("/trainee-username/{username}")
     @Operation(summary = "Retrieve specific training with the supplied trainee username")

@@ -44,12 +44,6 @@ public class TrainingService {
     }
 
     @Transactional
-    public Optional<Training> select(Long trainingId){
-        log.info("Getting training");
-        return trainingRepository.findById(trainingId);
-    }
-
-    @Transactional
     public List<Training> getAll(){
         log.info("Getting all trainings");
         return trainingRepository.findAll();

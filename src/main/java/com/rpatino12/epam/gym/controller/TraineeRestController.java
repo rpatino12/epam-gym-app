@@ -44,20 +44,10 @@ public class TraineeRestController {
         return new ResponseEntity<>(traineeService.getAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Retrieve specific trainee with the supplied trainee Id")
-    public ResponseEntity<Trainee> getTrainee(@PathVariable("id") long traineeId){
-        log.info("Received GET request to /api/trainees/{id} with parameter: {}", traineeId);
-
-        return traineeService.select(traineeId)
-                .map(trainee -> new ResponseEntity<>(trainee, HttpStatus.OK))
-                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping("/username/{username}")
+    @GetMapping("/{username}")
     @Operation(summary = "Retrieve specific trainee with the supplied trainee username")
     public ResponseEntity<Trainee> getTraineeByUsername(@PathVariable("username") String username){
-        log.info("Received GET request to /api/trainees/username/{username} with parameter: {}", username);
+        log.info("Received GET request to /api/trainees/{username} with parameter: {}", username);
 
         return traineeService.getByUsername(username)
                 .map(trainee -> new ResponseEntity<>(trainee, HttpStatus.OK))
@@ -90,22 +80,10 @@ public class TraineeRestController {
         return new ResponseEntity<>(traineeService.save(newTrainee), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/{id}")
-    @Operation(summary = "Delete specific trainee with the supplied trainee Id")
-    public ResponseEntity deleteTrainee(@PathVariable("id") long traineeId){
-        log.info("Received DELETE request to /api/trainees/delete/{id} with parameter: {}", traineeId);
-
-        if (traineeService.delete(traineeId)){
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @DeleteMapping("/delete-by-username/{username}")
+    @DeleteMapping("/delete/{username}")
     @Operation(summary = "Delete specific trainee with the supplied trainee username")
     public ResponseEntity deleteTraineeByUsername(@PathVariable(name = "username") String username){
-        log.info("Received DELETE request to /api/trainees/delete-by-username/{username} with parameter: {}", username);
+        log.info("Received DELETE request to /api/trainees/delete/{username} with parameter: {}", username);
 
         if (traineeService.deleteByUsername(username)){
             return new ResponseEntity<>(HttpStatus.OK);
