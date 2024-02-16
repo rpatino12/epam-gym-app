@@ -15,6 +15,15 @@ springdoc: # OpenAPI (Swagger) Configuration
   swagger-ui:
     enabled: 'true'
     path: /doc/swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    health:
+      roles: USER
+      show-details: when-authorized
 ---
 # Dev profile
 spring:
