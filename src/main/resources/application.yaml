@@ -20,7 +20,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: health, info, metrics, prometheus
     health:
       roles: USER
       show-details: when-authorized
