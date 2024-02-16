@@ -1,3 +1,22 @@
+# Common configuration
+spring:
+  profiles:
+    active: dev
+  jpa:
+    hibernate:
+      ddl-auto: none
+  output:
+    ansi:
+      enabled: ALWAYS
+
+springdoc: # OpenAPI (Swagger) Configuration
+  api-docs:
+    enabled: 'true'
+  swagger-ui:
+    enabled: 'true'
+    path: /doc/swagger-ui.html
+---
+# Dev profile
 spring:
   config:
     activate:
@@ -10,22 +29,9 @@ spring:
     driverClassName: org.h2.Driver
     username: ricardo
     password: epam
-  jpa:
-    hibernate:
-      ddl-auto: none
-  output:
-    ansi:
-      enabled: ALWAYS
+
 server:
   port: 8080
-
-# OpenAPI (Swagger) Configuration
-springdoc:
-  api-docs:
-    enabled: 'true'
-  swagger-ui:
-    enabled: 'true'
-    path: /doc/swagger-ui.html
 
 logging:
   level:
@@ -37,6 +43,7 @@ logging:
             init:
               ScriptUtils: debug
 ---
+# Prod profile
 spring:
   config:
     activate:
@@ -49,22 +56,9 @@ spring:
     driverClassName: org.h2.Driver
     username: admin
     password: password
-  jpa:
-    hibernate:
-      ddl-auto: none
-  output:
-    ansi:
-      enabled: ALWAYS
+
 server:
   port: 8000
-
-# OpenAPI (Swagger) Configuration
-springdoc:
-  api-docs:
-    enabled: 'true'
-  swagger-ui:
-    enabled: 'true'
-    path: /doc/swagger-ui.html
 
 logging:
   level:
