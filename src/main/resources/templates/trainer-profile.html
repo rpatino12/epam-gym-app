@@ -13,9 +13,9 @@
 
     <body>
         <div class="d-flex flex-column min-vh-100">
-            <header th:replace="header :: header"></header>
+            <header th:replace="~{header :: header}"></header>
 
-            <div class="container">
+            <div class="container my-3">
                 <div class="card">
                     <div class="card-body">
                         <h3 class="card-title" th:text="${trainer.firstName} + ' ' + ${trainer.lastName}">
@@ -46,7 +46,7 @@
                 </div>
             </div>
 
-            <footer th:replace="footer :: footer"></footer>
+            <footer th:replace="~{footer :: footer}"></footer>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"

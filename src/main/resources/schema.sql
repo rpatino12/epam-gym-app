@@ -2,8 +2,8 @@ CREATE TABLE USERS(
   USER_ID BIGSERIAL PRIMARY KEY,
   FIRST_NAME VARCHAR(64) NOT NULL,
   LAST_NAME VARCHAR(64) NOT NULL,
-  USERNAME VARCHAR(64) NOT NULL UNIQUE,
-  PASSWORD VARCHAR(64) NOT NULL,
+  USERNAME varchar_ignorecase(50) NOT NULL UNIQUE,
+  PASSWORD varchar_ignorecase(500) NOT NULL,
   IS_ACTIVE BOOLEAN NOT NULL
 );
 
@@ -41,3 +41,10 @@ CREATE TABLE TRAINING(
   TRAINING_DATE DATE NOT NULL,
   TRAINING_DURATION DOUBLE NOT NULL
 );
+
+create table authorities (
+	username varchar_ignorecase(50) not null,
+	authority varchar_ignorecase(50) not null,
+	constraint fk_authorities_users foreign key(username) references users(username)
+);
+create unique index ix_auth_username on authorities (username,authority);

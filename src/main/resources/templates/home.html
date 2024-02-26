@@ -13,7 +13,7 @@
 
     <body>
         <div class="d-flex flex-column min-vh-100">
-            <header th:replace="header :: header"></header>
+            <header th:replace="~{header :: header}"></header>
 
             <!-- Greeting Message -->
             <div class="container mt-5">
@@ -21,11 +21,14 @@
                     <div class="col-md-8 offset-md-2 text-center">
                         <h1>Welcome to Ricardo's Gym</h1>
                         <p class="lead">Let's begin with the journey to get the best version of yourself!</p>
+                        <div sec:authorize="isAuthenticated()">
+                            <a class="btn btn-primary" th:href="@{/trainee-profile}">View Profile</a>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <footer th:replace="footer :: footer"></footer>
+            <footer th:replace="~{footer :: footer}"></footer>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"

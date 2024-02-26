@@ -11,10 +11,10 @@
     </head>
     <body>
         <!-- Navigation Bar -->
-        <nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light bg-light shadow-sm" th:fragment="header">
             <div class="container-fluid px-4">
                 <a th:href="@{/home}" class="navbar-brand d-flex align-items-center mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-                    <img class="bi me-2" width="48px" height="48px" src="./assets/logo-dumbbell.svg" alt="dumbell-logo">
+<!--                    <img class="bi me-2" width="48px" height="48px" src="./assets/logo-dumbbell.svg" alt="dumbell-logo">-->
                     <span class="fs-4">Ricardo's Gym</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -23,14 +23,21 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
+                        <li class="nav-item" sec:authorize="isAnonymous()">
                             <a th:href="@{/trainee-registration}" class="nav-link">Register Trainee</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" sec:authorize="isAnonymous()">
                             <a th:href="@{/trainer-registration}" class="nav-link">Register Trainer</a>
                         </li>
                         <li class="nav-item">
-                            <a th:href="@{/login}" class="btn btn-primary ms-2">Login</a>
+                            <div sec:authorize="isAuthenticated()">
+                                <form th:action="@{/logout}" method="post">
+                                    <button type="submit" class="btn btn-primary">Logout</button>
+                                </form>
+                            </div>
+                            <div sec:authorize="isAnonymous()">
+                                <a class="btn btn-primary" href="#" th:href="@{/login}">Login</a>
+                            </div>
                         </li>
                     </ul>
                 </div>
