@@ -45,9 +45,4 @@ public class WebSecurityConfig {
         userDetailsManager.setAuthoritiesByUsernameQuery("SELECT username, authority FROM authorities WHERE username=?");
         return userDetailsManager;
     }
-
-    @Bean
-    public static PasswordEncoder getPasswordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-    }
 }

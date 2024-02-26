@@ -1,9 +1,15 @@
-insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Manya', 'Whitcomb', 'manya.whitcomb', 'vbxowmkpue', true);
-insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Shea', 'McFater', 'shea.mcfater', 'pmilyjaewb', true);
-insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Miquela', 'Trembley', 'miquela.trembley', 'lvuhcyjdmw', true);
-insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Roddy', 'Patman', 'roddy.patman', 'aulecriyox', true);
-insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Betteann', 'Staten', 'betteann.staten', 'npwrbgzsom', true);
-insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE) values ('Ricardo', 'Patino', 'ricardo.patino', 'password', true);
+insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE)
+values ('Manya', 'Whitcomb', 'manya.whitcomb', '{bcrypt}$2a$10$U8UCVtJVtahvbBqzvEiQnuYkjbPbKMh0nAk5UfKl6c1SsCSlu5Jcu', true);
+insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE)
+values ('Shea', 'McFater', 'shea.mcfater', '{bcrypt}$2a$10$1PLBB9PoNNIS3DCAX5rRX.jBKULwkfik8NWWF2ZrRCnGMk1zgK.W6', true);
+insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE)
+values ('Miquela', 'Trembley', 'miquela.trembley', '{bcrypt}$2a$10$2XyRIUzokwLdme4pJbNGr.DoPMrJUYeOzpheujN0IrMbl9TpVRooC', true);
+insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE)
+values ('Roddy', 'Patman', 'roddy.patman', '{bcrypt}$2a$10$t/thTC/OvAJzZLq7n/weIuWVpLI1lYwZwiuttk/I1WHWdSWOaKQTi', true);
+insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE)
+values ('Betteann', 'Staten', 'betteann.staten', '{bcrypt}$2a$10$fAGXmGOitlgf2ec7fxOfOeKtpRlDP3tcqT7qTkel91l2qYhEw1z3K', true);
+insert into USERS (FIRST_NAME, LAST_NAME, USERNAME, PASSWORD, IS_ACTIVE)
+values ('Ricardo', 'Patino', 'ricardo.patino', '{bcrypt}$2a$10$TgJORjmmAxr3f3jITjPxwuDj8A7rIk4dYJLbC0QK3.b5jpR/I9D6O', true);
 
 insert into authorities (username, authority) values('manya.whitcomb', 'ROLE_USER');
 insert into authorities (username, authority) values('shea.mcfater', 'ROLE_USER');
