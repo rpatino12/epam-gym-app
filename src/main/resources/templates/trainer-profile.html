@@ -18,14 +18,20 @@
             <div class="container my-3">
                 <div class="card">
                     <div class="card-body">
-                        <h3 class="card-title" th:text="${trainer.firstName} + ' ' + ${trainer.lastName}">
+                        <h3 class="card-title mb-1" th:text="${trainerUser.firstName} + ' ' + ${trainerUser.lastName}">
                             Trainer Name
                         </h3>
-                        <h5 class="card-subtitle mb-4" th:text="${trainer.username}">username</h5>
-                        <p th:text="'Specialization: ' + ${trainer.specialization}">Specialization</p>
-                        <p th:text="'Is Active: ' + ${trainer.isActive}">Is Active</p>
+                        <h6 class="card-subtitle mb-4 text-muted" th:text="'Username: ' + ${trainerUser.username}">username</h6>
+                        <p class="mb-1">
+                            <strong>Specialization: </strong>
+                            <span th:text="${trainer.specialization.getTrainingTypeName()}">Specialization</span>
+                        </p>
+                        <p class="mb-4">
+                            <strong>Is Active: </strong>
+                            <span th:text="${trainerUser.isActive}">Is Active</span>
+                        </p>
                         <table class="table">
-                            <h5>Trainees List</h5>
+                            <h5 class="mb-1">Trainees List</h5>
                             <thead>
                                 <th scope="col">First Name</th>
                                 <th scope="col">Last Name</th>

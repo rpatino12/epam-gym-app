@@ -18,15 +18,24 @@
             <div class="container my-3">
                 <div class="card">
                     <div class="card-body">
-                        <h3 class="card-title" th:text="${trainee.firstName} + ' ' + ${trainee.lastName}">
+                        <h3 class="card-title mb-1" th:text="${traineeUser.firstName} + ' ' + ${traineeUser.lastName}">
                             Trainee Name
                         </h3>
-                        <h5 class="card-subtitle mb-4" th:text="${trainee.username}">username</h5>
-                        <p th:text="'Date of Birth: ' + ${trainee.dateOfBirth}">Date of birth</p>
-                        <p th:text="'Address: ' + ${trainee.address}">Address</p>
-                        <p th:text="'Is Active: ' + ${trainee.isActive}">Is Active</p>
+                        <h6 class="card-subtitle mb-4 text-muted" th:text="'Username: ' + ${traineeUser.username}">username</h6>
+                        <p class="mb-1">
+                            <strong>Date of Birth: </strong>
+                            <span th:text="${trainee.dateOfBirth}">Date of birth</span>
+                        </p>
+                        <p class="mb-1">
+                            <strong>Address: </strong>
+                            <span th:text="${trainee.address}">Address</span>
+                        </p>
+                        <p class="mb-4">
+                            <strong>Is Active: </strong>
+                            <span th:text="${traineeUser.isActive}">Is Active</span>
+                        </p>
                         <table class="table">
-                            <h5>Trainers List</h5>
+                            <h5 class="mb-1">Trainers List</h5>
                             <thead>
                                 <th scope="col">First Name</th>
                                 <th scope="col">Last Name</th>
