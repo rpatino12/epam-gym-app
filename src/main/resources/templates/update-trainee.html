@@ -31,35 +31,41 @@
                                 Update Profile
                             </div>
                             <div class="card-body">
-                                <form th:action="@{/}" method="post">
+                                <form th:action="@{/api/trainees/update}" method="post">
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">
+                                            Username
+                                        </label>
+                                        <input type="text" class="form-control  bg-light" id="username" name="username" th:value="${traineeUser.username}" readonly required>
+                                    </div>
                                     <div class="mb-3">
                                         <label for="firstName" class="form-label">
-                                            First Name
+                                            First Name<span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" class="form-control" id="firstName" name="firstName">
+                                        <input type="text" class="form-control" id="firstName" name="firstName" th:value="${traineeUser.firstName}" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="lastName" class="form-label">
-                                            Last Name
+                                            Last Name<span class="text-danger">*</span>
                                         </label>
-                                        <input type="text" class="form-control" id="lastName" name="lastName">
+                                        <input type="text" class="form-control" id="lastName" name="lastName" th:value="${traineeUser.lastName}" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="birthdate" class="form-label">Date of Birth</label>
-                                        <input type="date" class="form-control" id="birthdate" name="birthdate">
+                                        <input type="date" class="form-control" id="birthdate" name="birthdate" th:value="${trainee.dateOfBirth}">
                                     </div>
                                     <div class="mb-3">
                                         <label for="address" class="form-label">Address</label>
-                                        <input type="text" class="form-control" id="address" name="address">
+                                        <input type="text" class="form-control" id="address" name="address" th:value="${trainee.address}">
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="isActive" id="isActive" checked>
+                                        <input class="form-check-input" type="radio" name="isActive" id="isActive" value="true" checked>
                                         <label class="form-check-label" for="isActive">
                                             Active
                                         </label>
                                     </div>
                                     <div class="mb-3 form-check">
-                                        <input class="form-check-input" type="radio" name="notActive" id="notActive">
+                                        <input class="form-check-input" type="radio" name="isActive" id="notActive" value="false">
                                         <label class="form-check-label" for="notActive">
                                             Not Active
                                         </label>

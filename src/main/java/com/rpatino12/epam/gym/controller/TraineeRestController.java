@@ -92,7 +92,7 @@ public class TraineeRestController {
         }
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     @Operation(summary = "Update trainee information")
     public ResponseEntity<Trainee> updateTrainee(
             @RequestHeader(name = "username") String username,
