@@ -1,5 +1,6 @@
 package com.rpatino12.epam.gym.service;
 
+import com.rpatino12.epam.gym.exception.UserNullException;
 import com.rpatino12.epam.gym.model.User;
 import com.rpatino12.epam.gym.repo.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,6 +52,17 @@ class UserServiceTest {
 
         assertNotNull(userSaved);
         assertEquals(user, userSaved);
+    }
+
+    @Test
+    @DisplayName("registerUser() with null user throw UserNullException")
+    void registerNullUser(){
+        User userNull = null;
+        assertThrows(
+                UserNullException.class,
+                () -> userService.registerUser(userNull),
+                "Exception not throw as expected"
+        );
     }
 
     @Test

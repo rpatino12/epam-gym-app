@@ -1,6 +1,8 @@
 package com.rpatino12.epam.gym.service;
 
 import com.rpatino12.epam.gym.dto.UserLogin;
+import com.rpatino12.epam.gym.exception.ResourceNotFoundException;
+import com.rpatino12.epam.gym.exception.TraineeNullException;
 import com.rpatino12.epam.gym.model.User;
 import com.rpatino12.epam.gym.repo.TraineeRepository;
 import com.rpatino12.epam.gym.model.Trainee;
@@ -28,7 +30,8 @@ public class TraineeService {
     @Transactional
     public UserLogin save(Trainee newTrainee){
         if (null == newTrainee){
-            throw new RuntimeException("Trainee cannot be null");
+            log.error("Cannot save a null or empty entity");
+            throw new TraineeNullException("Trainee cannot be null");
         }
         newTrainee.setUser(userService.registerUser(newTrainee.getUser()));
         Trainee trainee = traineeRepository.save(newTrainee);
@@ -39,6 +42,10 @@ public class TraineeService {
 
     @Transactional
     public Trainee update(Trainee updatedTrainee, String username) {
+        if (null == updatedTrainee){
+            log.error("Cannot update trainee");
+            throw new TraineeNullException("Trainee cannot be null");
+        }
         User updatedUser = userService.updateUser(updatedTrainee.getUser(), username);
         log.info("""
                         Updating trainee {}:\s
@@ -54,6 +61,10 @@ public class TraineeService {
                 updatedTrainee.getAddress()==null?"-":updatedTrainee.getAddress(),
                 updatedUser.getIsActive());
 
+        if (traineeRepository.findTraineeByUserUsername(username).isEmpty()){
+            log.error("The entity to be updated does not exist");
+            throw new ResourceNotFoundException("Trainee", "username", username);
+        }
         Trainee trainee = traineeRepository.findTraineeByUserUsername(username).get();
 
         if (updatedTrainee.getDateOfBirth() != null){
@@ -83,7 +94,12 @@ public class TraineeService {
     @Transactional
     public List<Trainee> getAll(){
         log.info("Getting all trainees");
-        return traineeRepository.findAll();
+        List<Trainee> trainees = traineeRepository.findAll();
+        if (trainees.isEmpty()){
+            log.error("There are no trainees registered");
+            throw new ResourceNotFoundException("Trainee");
+        }
+        return trainees;
     }
 
     @Transactional

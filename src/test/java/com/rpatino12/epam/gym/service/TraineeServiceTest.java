@@ -1,6 +1,7 @@
 package com.rpatino12.epam.gym.service;
 
 import com.rpatino12.epam.gym.dto.UserLogin;
+import com.rpatino12.epam.gym.exception.TraineeNullException;
 import com.rpatino12.epam.gym.model.Trainee;
 import com.rpatino12.epam.gym.model.User;
 import com.rpatino12.epam.gym.repo.TraineeRepository;
@@ -76,6 +77,17 @@ class TraineeServiceTest {
         assertNotNull(userLogin);
         assertEquals(user.getUsername(), userLogin.getUsername());
         assertEquals(user.getPassword(), userLogin.getPassword());
+    }
+
+    @Test
+    @DisplayName("save() with null trainee throw TraineeNullException")
+    void saveNull(){
+        Trainee traineeNull = null;
+        assertThrows(
+                TraineeNullException.class,
+                () -> traineeService.save(traineeNull),
+                "Exception not throw as expected"
+        );
     }
 
     @Test
