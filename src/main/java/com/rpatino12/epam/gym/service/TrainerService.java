@@ -1,6 +1,8 @@
 package com.rpatino12.epam.gym.service;
 
 import com.rpatino12.epam.gym.dto.UserLogin;
+import com.rpatino12.epam.gym.exception.ResourceNotFoundException;
+import com.rpatino12.epam.gym.exception.TrainerNullException;
 import com.rpatino12.epam.gym.model.User;
 import com.rpatino12.epam.gym.repo.TrainerRepository;
 import com.rpatino12.epam.gym.model.Trainer;
@@ -28,7 +30,8 @@ public class TrainerService {
     @Transactional
     public UserLogin save(Trainer newTrainer){
         if (null == newTrainer){
-            throw new RuntimeException("Trainer cannot be null");
+            log.error("Cannot save a null or empty entity");
+            throw new TrainerNullException("Trainer cannot be null");
         }
         newTrainer.setUser(userService.registerUser(newTrainer.getUser()));
         Trainer trainer = trainerRepository.save(newTrainer);
@@ -39,8 +42,16 @@ public class TrainerService {
 
     @Transactional
     public Trainer update(Trainer updatedTrainer, String username){
+        if (null == updatedTrainer){
+            log.error("Cannot update trainer");
+            throw new TrainerNullException("Trainer cannot be null");
+        }
         User updatedUser = userService.updateUser(updatedTrainer.getUser(), username);
 
+        if (trainerRepository.findTrainerByUserUsername(username).isEmpty()){
+            log.error("The entity to be updated does not exist");
+            throw new ResourceNotFoundException("Trainer", "username", username);
+        }
         Trainer trainer = trainerRepository.findTrainerByUserUsername(username).get();
         trainer.setSpecialization(updatedTrainer.getSpecialization());
         trainer.setUser(updatedUser);
@@ -63,7 +74,12 @@ public class TrainerService {
     @Transactional
     public List<Trainer> getAll(){
         log.info("Getting all trainers");
-        return trainerRepository.findAll();
+        List<Trainer> trainers = trainerRepository.findAll();
+        if (trainers.isEmpty()){
+            log.error("There are no trainees registered");
+            throw new ResourceNotFoundException("Trainer");
+        }
+        return trainers;
     }
 
     @Transactional

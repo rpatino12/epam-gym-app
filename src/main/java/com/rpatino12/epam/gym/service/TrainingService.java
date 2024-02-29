@@ -1,5 +1,7 @@
 package com.rpatino12.epam.gym.service;
 
+import com.rpatino12.epam.gym.exception.ResourceNotFoundException;
+import com.rpatino12.epam.gym.exception.TrainingNullException;
 import com.rpatino12.epam.gym.model.Trainee;
 import com.rpatino12.epam.gym.model.Trainer;
 import com.rpatino12.epam.gym.repo.TrainingRepository;
@@ -29,6 +31,10 @@ public class TrainingService {
     // Training Service class should support possibility to create/select Training profile.
     @Transactional
     public boolean save(Training newTraining, String traineeUsername, String trainerUsername){
+        if (null == newTraining){
+            log.error("Cannot save a null or empty entity");
+            throw new TrainingNullException("Training cannot be null");
+        }
         Optional<Trainee> trainee = traineeService.getByUsername(traineeUsername);
         Optional<Trainer> trainer = trainerService.getByUsername(trainerUsername);
         if (trainee.isPresent() && trainer.isPresent()){
@@ -46,7 +52,12 @@ public class TrainingService {
     @Transactional
     public List<Training> getAll(){
         log.info("Getting all trainings");
-        return trainingRepository.findAll();
+        List<Training> trainings = trainingRepository.findAll();
+        if (trainings.isEmpty()){
+            log.error("There are no trainings registered");
+            throw new ResourceNotFoundException("Training");
+        }
+        return trainings;
     }
 
     @Transactional

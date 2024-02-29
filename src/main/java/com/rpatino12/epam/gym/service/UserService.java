@@ -1,5 +1,7 @@
 package com.rpatino12.epam.gym.service;
 
+import com.rpatino12.epam.gym.exception.ResourceNotFoundException;
+import com.rpatino12.epam.gym.exception.UserNullException;
 import com.rpatino12.epam.gym.repo.UserRepository;
 import com.rpatino12.epam.gym.model.User;
 import jakarta.annotation.PostConstruct;
@@ -21,6 +23,10 @@ public class UserService {
 
     @Transactional
     public User registerUser(User user){
+        if (null == user){
+            log.error("Cannot save a null entity");
+            throw new UserNullException("User cannot be null");
+        }
         String username = generateUsername(user.getFirstName(), user.getLastName());
         String password = generateRandomPassword();
 
@@ -44,6 +50,14 @@ public class UserService {
     @Transactional
     public User updateUser(User newUser, String username){
         log.info("Updating user");
+        if (null == newUser){
+            log.error("Cannot save a null entity");
+            throw new UserNullException("User cannot be null");
+        }
+        if (userRepository.findByUsername(username).isEmpty()){
+            log.error("The entity to be updated does not exist");
+            throw new ResourceNotFoundException("User", "username", username);
+        }
         return userRepository.findByUsername(username)
                 .map(
                         user -> {
@@ -58,6 +72,10 @@ public class UserService {
     @Transactional
     public User updateUserPassword(String newPassword, Long userId){
         log.info("Updating user password");
+        if (userRepository.findById(userId).isEmpty()){
+            log.error("The entity to be updated does not exist");
+            throw new ResourceNotFoundException("User", "id", userId);
+        }
         return userRepository.findById(userId)
                 .map(
                         user -> {
@@ -70,6 +88,10 @@ public class UserService {
     @Transactional
     public User updateStatus(boolean isActive, Long userId){
         log.info("Updating user status");
+        if (userRepository.findById(userId).isEmpty()){
+            log.error("The entity to be updated does not exist");
+            throw new ResourceNotFoundException("User", "id", userId);
+        }
         return userRepository.findById(userId)
                 .map(
                         user -> {

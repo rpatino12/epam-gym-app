@@ -1,5 +1,7 @@
 package com.rpatino12.epam.gym.service;
 
+import com.rpatino12.epam.gym.exception.ResourceNotFoundException;
+import com.rpatino12.epam.gym.exception.UserNullException;
 import com.rpatino12.epam.gym.model.User;
 import com.rpatino12.epam.gym.repo.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,6 +53,44 @@ class UserServiceTest {
 
         assertNotNull(userSaved);
         assertEquals(user, userSaved);
+    }
+
+    @Test
+    @DisplayName("Working with null user will throw UserNullException")
+    void throwsUserNullException(){
+        User userNull = null;
+        assertThrows(
+                UserNullException.class,
+                () -> userService.registerUser(userNull),
+                "Exception not throw as expected"
+        );
+        assertThrows(
+                UserNullException.class,
+                () -> userService.updateUser(userNull, user.getUsername()),
+                "Exception not throw as expected"
+        );
+    }
+
+    @Test
+    @DisplayName("No entity found will throw ResourceNotFoundException")
+    void throwsResourceNotFoundException(){
+        Mockito.doReturn(Optional.empty()).when(userRepository).findByUsername("notAnUser");
+        Mockito.doReturn(Optional.empty()).when(userRepository).findById(0L);
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> userService.updateUser(user, "notAnUser"),
+                "Exception not throw as expected"
+        );
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> userService.updateUserPassword("newPassword", 0L),
+                "Exception not throw as expected"
+        );
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> userService.updateStatus(true, 0L),
+                "Exception not throw as expected"
+        );
     }
 
     @Test

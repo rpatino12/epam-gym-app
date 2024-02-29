@@ -1,6 +1,8 @@
 package com.rpatino12.epam.gym.service;
 
 import com.rpatino12.epam.gym.dto.UserLogin;
+import com.rpatino12.epam.gym.exception.ResourceNotFoundException;
+import com.rpatino12.epam.gym.exception.TrainerNullException;
 import com.rpatino12.epam.gym.model.Trainer;
 import com.rpatino12.epam.gym.model.TrainingType;
 import com.rpatino12.epam.gym.model.TrainingTypes;
@@ -70,6 +72,40 @@ class TrainerServiceTest {
         assertNotNull(userLogin);
         assertEquals(user.getUsername(), userLogin.getUsername());
         assertEquals(user.getPassword(), userLogin.getPassword());
+    }
+
+    @Test
+    @DisplayName("Working with null trainer will throw TrainerNullException")
+    void throwsTrainerNullException(){
+        Trainer trainerNull = null;
+        assertThrows(TrainerNullException.class,
+                () -> trainerService.save(trainerNull),
+                "Exception not throw as expected"
+        );
+        assertThrows(TrainerNullException.class,
+                () -> trainerService.update(trainerNull, user.getUsername()),
+                "Exception not throw as expected"
+        );
+    }
+
+    @Test
+    @DisplayName("No entity found will throw ResourceNotFoundException")
+    void throwsResourceNotFoundException(){
+        List<Trainer> emptyTrainerList = new ArrayList<>();
+        Mockito.doReturn(emptyTrainerList).when(trainerRepository).findAll();
+        Mockito.doReturn(user).when(userService).updateUser(user, "notAnUser");
+        Mockito.doReturn(Optional.empty()).when(trainerRepository).findTrainerByUserUsername("notAnUser");
+
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> trainerService.getAll(),
+                "Exception not throw as expected"
+        );
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> trainerService.update(trainer, "notAnUser"),
+                "Exception not throw as expected"
+        );
     }
 
     @Test

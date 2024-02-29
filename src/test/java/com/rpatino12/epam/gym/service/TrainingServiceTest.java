@@ -1,5 +1,7 @@
 package com.rpatino12.epam.gym.service;
 
+import com.rpatino12.epam.gym.exception.ResourceNotFoundException;
+import com.rpatino12.epam.gym.exception.TrainingNullException;
 import com.rpatino12.epam.gym.model.Trainee;
 import com.rpatino12.epam.gym.model.Trainer;
 import com.rpatino12.epam.gym.model.Training;
@@ -97,6 +99,28 @@ class TrainingServiceTest {
 
         boolean isTrainingSaved = trainingService.save(training, userTrainee.getUsername(), userTrainer.getUsername());
         assertTrue(isTrainingSaved);
+    }
+
+    @Test
+    @DisplayName("save() with null training throw TrainingNullException")
+    void saveNull(){
+        Training trainingNull = null;
+        assertThrows(TrainingNullException.class,
+                () -> trainingService.save(trainingNull, userTrainee.getUsername(), userTrainer.getUsername()),
+                "Exception not throw as expected"
+        );
+    }
+
+    @Test
+    @DisplayName("No entity found will throw ResourceNotFoundException")
+    void throwsResourceNotFoundException(){
+        List<Training> emptyTrainingList = new ArrayList<>();
+        Mockito.doReturn(emptyTrainingList).when(trainingRepository).findAll();
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> trainingService.getAll(),
+                "Exception not throw as expected"
+        );
     }
 
     @Test
