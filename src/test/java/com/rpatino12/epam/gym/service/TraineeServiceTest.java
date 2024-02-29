@@ -1,6 +1,7 @@
 package com.rpatino12.epam.gym.service;
 
 import com.rpatino12.epam.gym.dto.UserLogin;
+import com.rpatino12.epam.gym.exception.ResourceNotFoundException;
 import com.rpatino12.epam.gym.exception.TraineeNullException;
 import com.rpatino12.epam.gym.model.Trainee;
 import com.rpatino12.epam.gym.model.User;
@@ -80,14 +81,41 @@ class TraineeServiceTest {
     }
 
     @Test
-    @DisplayName("save() with null trainee throw TraineeNullException")
-    void saveNull(){
+    @DisplayName("Working with null trainee will throw TraineeNullException")
+    void throwsTraineeNullException(){
         Trainee traineeNull = null;
         assertThrows(
                 TraineeNullException.class,
                 () -> traineeService.save(traineeNull),
                 "Exception not throw as expected"
         );
+        assertThrows(
+                TraineeNullException.class,
+                () -> traineeService.update(traineeNull, user.getUsername()),
+                "Exception not throw as expected"
+        );
+    }
+
+    @Test
+    @DisplayName("No entity found will throw ResourceNotFoundException")
+    void throwsResourceNotFoundException(){
+        List<Trainee> emptyTraineeList = new ArrayList<>();
+        Mockito.doReturn(emptyTraineeList).when(traineeRepository).findAll();
+        Mockito.doReturn(user).when(userService).updateUser(user, "notAnUser");
+        Mockito.doReturn(Optional.empty()).when(traineeRepository).findTraineeByUserUsername("notAnUser");
+
+
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> traineeService.getAll(),
+                "Exception not throw as expected"
+        );
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> traineeService.update(trainee, "notAnUser"),
+                "Exception not throw as expected"
+        );
+
     }
 
     @Test
