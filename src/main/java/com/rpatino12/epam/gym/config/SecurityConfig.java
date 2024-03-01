@@ -1,39 +1,77 @@
 package com.rpatino12.epam.gym.config;
 
+import com.nimbusds.jose.jwk.source.ImmutableSecret;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.ArrayList;
+import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Value("${jwt.key}")
+    private String jwtKey;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().authenticated())
+                        .requestMatchers("/api/auth/token").hasRole("USER")
+                        .anyRequest().hasAuthority("SCOPE_READ"))
+                .oauth2ResourceServer((oauth2) -> oauth2
+                        .jwt(Customizer.withDefaults())) // We need an encoder and decoder JWT bean, in this case we are using symmetric key encryption, this means the same key is going to sign and verify the JWT
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
 
     @Bean
-    public InMemoryUserDetailsManager user() {
+    public UserDetailsService userDetailsService() {
         return new InMemoryUserDetailsManager(
                 User.withUsername("rpatino12")
                         .password("{noop}epam")
-                        .authorities(new ArrayList<>()) // here he had "read" as argument
-                        .build()
-        );
+                        .authorities("READ", "ROLE_USER")
+                        .build());
     }
+
+    // The structure of a JWT has 3 parts separated by dots: Header, Payload and Signature
+    // The signature is created by encrypting the header + payload and a secret (or private key)
+    // Because we are working with symmetric key, we are going to use the MacAlgorithm HS512 to sign the token
+    // and also to verify the token (note that the jwtDecoder uses that algorithm to decode the token)
+    @Bean
+    JwtEncoder jwtEncoder(){
+        return new NimbusJwtEncoder(new ImmutableSecret<>(jwtKey.getBytes()));
+    }
+
+    @Bean
+    public JwtDecoder jwtDecoder(){
+        byte[] bytes = jwtKey.getBytes();
+        SecretKeySpec originalKey = new SecretKeySpec(bytes, 0, bytes.length, "RSA");
+        // Here we use NimbusJwtDecoder.withSecretKey() because we are working with symmetric key
+        // If we had worked with asymmetric keys (public-private pair keys) we would use NimbusJwtDecoder.withPublicKey()
+        return NimbusJwtDecoder.withSecretKey(originalKey).macAlgorithm(MacAlgorithm.HS512).build();
+    }
+
+    // Notes:
+    // For larger scale applications you would have an Authorization Server, and also in these cases:
+        // - The moment you want to introduce refresh tokens in your application
+        // - When you have more than one Web Service or you want to be able to harden security, isolating something as critical as authentication provides value because the attack service is reduced (also helps with DRY)
+    // For this project we are using self-signed JWTs, and this will eliminate the need of an Authorization Server
 }
