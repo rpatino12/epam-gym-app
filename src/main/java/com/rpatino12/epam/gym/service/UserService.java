@@ -130,7 +130,7 @@ public class UserService {
         while (userRepository.existsUserByUsername(username)) {
             username = baseUsername + serialNumber++;
         }
-        return username;
+        return username.toLowerCase();
     }
 
     private String generateRandomPassword() {

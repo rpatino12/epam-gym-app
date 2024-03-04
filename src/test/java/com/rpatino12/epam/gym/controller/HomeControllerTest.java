@@ -41,7 +41,7 @@ class HomeControllerTest {
     @Test
     void tokenWithBasicThenGetToken() throws Exception {
         MvcResult result = this.mvc.perform(post("/api/auth/token")
-                        .with(httpBasic("rpatino12", "epam")))
+                        .with(httpBasic("ricardo.patino", "password")))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -51,7 +51,7 @@ class HomeControllerTest {
     @Test
     void rootWhenAuthenticatedThenSaysHelloUser() throws Exception {
         MvcResult result = this.mvc.perform(post("/api/auth/token")
-                        .with(httpBasic("rpatino12", "epam")))
+                        .with(httpBasic("ricardo.patino", "password")))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -59,7 +59,7 @@ class HomeControllerTest {
 
         this.mvc.perform(get("/api/hello")
                 .header("Authorization", "Bearer " + token))
-                .andExpect(content().string("Hello rpatino12"));
+                .andExpect(content().string("Hello ricardo.patino"));
     }
 
     @Test
@@ -71,7 +71,7 @@ class HomeControllerTest {
     @Test
     public void rootWithBasicStatusIsForbidden() throws Exception {
         this.mvc.perform(get("/api/hello")
-                .with(httpBasic("rpatino12", "epam")))
+                .with(httpBasic("ricardo.patino", "password")))
                 .andExpect(status().isForbidden());
     }
 }
