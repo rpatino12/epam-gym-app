@@ -47,6 +47,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults()) // By default, use a bean by the name of corsConfigurationSource
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/trainees/save", "/api/trainers/save").permitAll()
+                        .requestMatchers("/doc/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/webjars/**", "/swagger-resources/**").permitAll()
                         .requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
                         .requestMatchers("/api/auth/token").hasRole("USER")
                         .anyRequest().hasAuthority("SCOPE_READ"))

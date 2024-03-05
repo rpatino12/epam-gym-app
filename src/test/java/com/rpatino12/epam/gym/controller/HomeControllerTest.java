@@ -9,21 +9,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import com.rpatino12.epam.gym.config.SecurityConfig;
-import com.rpatino12.epam.gym.service.TokenService;
-
-@WebMvcTest({ HomeController.class, AuthController.class })
-@Import({ SecurityConfig.class, TokenService.class })
+@SpringBootTest
+@AutoConfigureMockMvc
 class HomeControllerTest {
 
     @Autowired
-    MockMvc mvc;
+    private MockMvc mvc;
 
     @Test
     void tokenWhenAnonymousThenStatusIsUnauthorized() throws Exception {
