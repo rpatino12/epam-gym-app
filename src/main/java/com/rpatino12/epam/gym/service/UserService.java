@@ -122,7 +122,7 @@ public class UserService {
 
     @Transactional
     private String generateUsername(String firstName, String lastName) {
-        String baseUsername = firstName + "." + lastName;
+        String baseUsername = firstName.split(" ")[0] + "." + lastName.split(" ")[0];
         String username = baseUsername;
 
         // Check if the username already exists, add a serial number if necessary
@@ -130,7 +130,7 @@ public class UserService {
         while (userRepository.existsUserByUsername(username)) {
             username = baseUsername + serialNumber++;
         }
-        return username;
+        return username.toLowerCase();
     }
 
     private String generateRandomPassword() {
