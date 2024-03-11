@@ -1,5 +1,7 @@
 package com.rpatino12.epam.gym.controller;
 
+import com.rpatino12.epam.gym.dto.TrainerDto;
+import com.rpatino12.epam.gym.dto.UpdateUserDto;
 import com.rpatino12.epam.gym.dto.UserLogin;
 import com.rpatino12.epam.gym.model.Trainer;
 import com.rpatino12.epam.gym.model.TrainingType;
@@ -7,6 +9,7 @@ import com.rpatino12.epam.gym.model.User;
 import com.rpatino12.epam.gym.service.TrainerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +18,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,22 +57,19 @@ public class TrainerRestController {
     // Create trainer method (POST)
     @PostMapping("/save")
     @Operation(summary = "Create a new trainer")
-    public ResponseEntity<UserLogin> createTrainer(
-            @RequestHeader(name = "firstName") String firstName,
-            @RequestHeader(name = "lastName") String lastName,
-            @RequestHeader(name = "specializationId") long specializationId){
+    public ResponseEntity<UserLogin> createTrainer(@Valid @RequestBody TrainerDto trainer){
         log.info("Received POST request to /api/trainers/save");
 
-        if (specializationId < 1 || specializationId > 5) {
+        if (trainer.getSpecializationId() < 1 || trainer.getSpecializationId() > 5) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         User newUser = new User();
-        newUser.setFirstName(firstName);
-        newUser.setLastName(lastName);
+        newUser.setFirstName(trainer.getFirstName());
+        newUser.setLastName(trainer.getLastName());
 
         TrainingType trainingType = new TrainingType();
-        trainingType.setTrainingTypeId(specializationId);
+        trainingType.setTrainingTypeId(trainer.getSpecializationId());
 
         Trainer newTrainer = new Trainer();
         newTrainer.setUser(newUser);
@@ -81,45 +81,41 @@ public class TrainerRestController {
     // Update trainer method (POST)
     @PutMapping("/update")
     @Operation(summary = "Update trainer information")
-    public ResponseEntity<Trainer> updateTrainer(
-            @RequestHeader(name = "username") String username,
-            @RequestHeader(name = "firstName") String firstName,
-            @RequestHeader(name = "lastName") String lastName,
-            @RequestHeader(name = "isActive") boolean isActive,
-            @RequestHeader(name = "specializationId") Long specializationId){
+    public ResponseEntity<Trainer> updateTrainer(@Valid @RequestBody TrainerDto trainer){
         log.info("Received PUT request to /api/trainers/update");
 
-        if (trainerService.getByUsername(username).isEmpty()){
+        if (trainerService.getByUsername(trainer.getUsername()).isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if (specializationId < 1 || specializationId > 5) {
+        if (trainer.getSpecializationId() < 1 || trainer.getSpecializationId() > 5) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
         User updatedUser = new User();
-        updatedUser.setFirstName(firstName);
-        updatedUser.setLastName(lastName);
-        updatedUser.setIsActive(isActive);
+        updatedUser.setFirstName(trainer.getFirstName());
+        updatedUser.setLastName(trainer.getLastName());
+        updatedUser.setIsActive(trainer.isActive());
 
         TrainingType trainingType = new TrainingType();
-        trainingType.setTrainingTypeId(specializationId);
+        trainingType.setTrainingTypeId(trainer.getSpecializationId());
 
         Trainer updatedTrainer = new Trainer();
         updatedTrainer.setUser(updatedUser);
         updatedTrainer.setSpecialization(trainingType);
 
-        return new ResponseEntity<>(trainerService.update(updatedTrainer, username), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(trainerService.update(updatedTrainer, trainer.getUsername()), HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/update-password")
     @Operation(summary = "Update trainer password")
-    public ResponseEntity<String> updatePassword(
-            @RequestHeader(name = "username") String username,
-            @RequestHeader(name = "password") String password,
-            @RequestHeader(name = "newPassword") String newPassword){
+    public ResponseEntity<String> updatePassword(@RequestBody UpdateUserDto credentials){
         log.info("Received PUT request to /api/trainers/update-password");
 
-        String updatedStatus = trainerService.updatePassword(username, password, newPassword);
+        String updatedStatus = trainerService.updatePassword(
+                credentials.getUsername(),
+                credentials.getPassword(),
+                credentials.getNewPassword()
+        );
         if (updatedStatus.equals("Password updated")){
             return new ResponseEntity<>(updatedStatus, HttpStatus.ACCEPTED);
         } else if (updatedStatus.equals("Wrong username or password")) {
@@ -131,12 +127,10 @@ public class TrainerRestController {
 
     @PatchMapping("/activate")
     @Operation(summary = "Activate/Deactivate trainer")
-    public ResponseEntity<String> updateStatus(
-            @RequestHeader(name = "username") String username,
-            @RequestHeader(name = "password") String password) {
+    public ResponseEntity<String> updateStatus(@RequestBody UserLogin userLogin) {
         log.info("Received PATCH request to /api/trainers/activate");
 
-        String activate = trainerService.updateActiveStatus(username, password);
+        String activate = trainerService.updateActiveStatus(userLogin.getUsername(), userLogin.getPassword());
         if (activate.equals("Wrong username or password")){
             return new ResponseEntity<>(activate, HttpStatus.UNAUTHORIZED);
         } else {
