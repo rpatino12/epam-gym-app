@@ -7,7 +7,7 @@ import com.rpatino12.epam.gym.model.Trainer;
 import com.rpatino12.epam.gym.repo.TrainingRepository;
 import com.rpatino12.epam.gym.model.Training;
 import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +50,7 @@ public class TrainingService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Training> getAll(){
         log.info("Getting all trainings");
         List<Training> trainings = trainingRepository.findAll();
@@ -61,13 +61,13 @@ public class TrainingService {
         return trainings;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<List<Training>> getByTraineeUsername(String username){
         log.info("Getting trainee " + username + " trainings: ");
         return trainingRepository.findTrainingByTraineeUserUsername(username);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<List<Training>> getByTrainerUsername(String username){
         log.info("Getting trainer " + username + " trainings: ");
         return trainingRepository.findTrainingByTrainerUserUsername(username);

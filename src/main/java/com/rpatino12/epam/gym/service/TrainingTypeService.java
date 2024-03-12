@@ -3,7 +3,7 @@ package com.rpatino12.epam.gym.service;
 import com.rpatino12.epam.gym.dto.TrainingTypeDto;
 import com.rpatino12.epam.gym.model.TrainingType;
 import com.rpatino12.epam.gym.repo.TrainingTypeRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ public class TrainingTypeService {
         this.trainingTypeRepository = trainingTypeRepository;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<TrainingTypeDto> getAll(){
         Iterable<TrainingType> trainingTypes = trainingTypeRepository.findAll();
         List<TrainingTypeDto> trainingTypeDtos = new ArrayList<>();

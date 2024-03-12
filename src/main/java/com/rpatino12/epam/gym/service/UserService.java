@@ -5,7 +5,7 @@ import com.rpatino12.epam.gym.exception.UserNullException;
 import com.rpatino12.epam.gym.repo.UserRepository;
 import com.rpatino12.epam.gym.model.User;
 import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +41,7 @@ public class UserService {
         return userRepository.save(newUser);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<User> getUserByUsername(String username){
         log.info("Searching user: " + username);
         return userRepository.findByUsername(username);

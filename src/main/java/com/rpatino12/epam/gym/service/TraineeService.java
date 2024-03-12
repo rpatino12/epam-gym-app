@@ -7,7 +7,7 @@ import com.rpatino12.epam.gym.model.User;
 import com.rpatino12.epam.gym.repo.TraineeRepository;
 import com.rpatino12.epam.gym.model.Trainee;
 import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -91,7 +91,7 @@ public class TraineeService {
         return isDeleteSuccessful;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Trainee> getAll(){
         log.info("Getting all trainees");
         List<Trainee> trainees = traineeRepository.findAll();
@@ -102,7 +102,7 @@ public class TraineeService {
         return trainees;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<Trainee> getByUsername(String username){
         log.info("Searching trainee: " + username);
         return traineeRepository.findTraineeByUserUsername(username);
