@@ -1,10 +1,15 @@
 package com.rpatino12.epam.gym.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rpatino12.epam.gym.dto.TraineeDto;
+import com.rpatino12.epam.gym.dto.UpdateUserDto;
+import com.rpatino12.epam.gym.dto.UserLogin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -24,6 +29,9 @@ class TraineeRestControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private ObjectMapper mapper;
 
     private String token;
 
@@ -64,32 +72,33 @@ class TraineeRestControllerTest {
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isNotFound());
 
+        TraineeDto traineeDto = new TraineeDto("trainee404", "NoTrainee", "Smith", true);
+
         this.mvc.perform(put("/api/trainees/update")
                         .header("Authorization", "Bearer " + token)
-                        .header("username", "trainee404")
-                        .header("firstName", "NoTrainee")
-                        .header("lastName", "Smith")
-                        .header("isActive", "true"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(traineeDto)))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void createTrainee() throws Exception {
+        TraineeDto traineeDto = new TraineeDto("Elton John", "Doe", "1999-01-31", "123 Elm Street");
+
         this.mvc.perform(post("/api/trainees/save")
-                        .header("firstName", "Elton John")
-                        .header("lastName", "Doe")
-                        .header("birthdate", "1999-01-31")
-                        .header("address", "123 Elm Street"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(traineeDto)))
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString("\"username\":\"elton.doe\"")));
     }
 
     @Test
     void whenNoNameOrLastNameThen400() throws Exception {
+        TraineeDto traineeDto = new TraineeDto("", "Doe", "2001-07-21", "5th Ave, New York");
+
         this.mvc.perform(post("/api/trainees/save")
-                        .header("lastName", "Doe")
-                        .header("birthdate", "2001-07-21")
-                        .header("address", "5th Ave, New York"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(traineeDto)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -102,14 +111,12 @@ class TraineeRestControllerTest {
 
     @Test
     void updateTrainee() throws Exception {
+        TraineeDto traineeDto = new TraineeDto("shea.mcfater", "Kylian", "Mbappe", "1999-02-02", "Eiffel tower, Paris", false);
+
         this.mvc.perform(put("/api/trainees/update")
                         .header("Authorization", "Bearer " + token)
-                        .header("username", "shea.mcfater")
-                        .header("firstName", "Kylian")
-                        .header("lastName", "Mbappe")
-                        .header("isActive", "false")
-                        .header("birthdate", "1999-02-02")
-                        .header("address", "Eiffel tower, Paris"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(traineeDto)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string(containsString("\"username\":\"shea.mcfater\"")))
                 .andExpect(content().string(containsString("\"firstName\":\"Kylian\"")))
@@ -119,48 +126,55 @@ class TraineeRestControllerTest {
 
     @Test
     void updatePassword() throws Exception {
+        UpdateUserDto credentials = new UpdateUserDto("manya.whitcomb", "vbxowmkpue", "very-strong-password1234!");
+
         this.mvc.perform(put("/api/trainees/update-password")
                         .header("Authorization", "Bearer " + token)
-                        .header("username", "manya.whitcomb")
-                        .header("password", "vbxowmkpue")
-                        .header("newPassword", "very-strong-password1234!"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(credentials)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string(containsString("Password updated")));
     }
 
     @Test
     void whenPasswordsNotMatchThen401() throws Exception {
+        UpdateUserDto credentials = new UpdateUserDto("manya.whitcomb", "wrong-password", "easy-password");
+
+        UserLogin userLogin = new UserLogin("manya.whitcomb", "wrong-password");
+
         this.mvc.perform(put("/api/trainees/update-password")
                         .header("Authorization", "Bearer " + token)
-                        .header("username", "manya.whitcomb")
-                        .header("password", "wrong-password")
-                        .header("newPassword", "easy-password"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(credentials)))
                 .andExpect(status().isUnauthorized());
 
         this.mvc.perform(patch("/api/trainees/activate")
                         .header("Authorization", "Bearer " + token)
-                        .header("username", "manya.whitcomb")
-                        .header("password", "wrong-password"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(userLogin)))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     void whenNoPasswordProvidedThen400() throws Exception {
+        UpdateUserDto credentials = new UpdateUserDto("manya.whitcomb", "vbxowmkpue", "");
+
         this.mvc.perform(put("/api/trainees/update-password")
                         .header("Authorization", "Bearer " + token)
-                        .header("username", "manya.whitcomb")
-                        .header("password", "vbxowmkpue")
-                        .header("newPassword", ""))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(credentials)))
                 .andExpect(status().isBadRequest());
     }
 
 
     @Test
     void updateStatus() throws Exception {
+        UserLogin userLogin = new UserLogin("manya.whitcomb", "vbxowmkpue");
+
         this.mvc.perform(patch("/api/trainees/activate")
                         .header("Authorization", "Bearer " + token)
-                        .header("username", "manya.whitcomb")
-                        .header("password", "vbxowmkpue"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(userLogin)))
                 .andExpect(status().isAccepted())
                 .andExpect(content().string(containsString("User deactivated")));
     }

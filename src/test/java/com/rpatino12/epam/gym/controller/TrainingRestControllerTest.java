@@ -1,10 +1,13 @@
 package com.rpatino12.epam.gym.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rpatino12.epam.gym.dto.TrainingDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -21,6 +24,9 @@ class TrainingRestControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @Autowired
+    private ObjectMapper mapper;
 
     private String token;
 
@@ -100,40 +106,24 @@ class TrainingRestControllerTest {
 
     @Test
     void createTraining() throws Exception {
+        TrainingDto trainingDto = new TrainingDto("Mr. Olympia Training", "2024-01-10", 35.2, "betteann.staten", "manya.whitcomb");
+
         this.mvc.perform(post("/api/trainings/save")
                         .header("Authorization", "Bearer " + token)
-                        .header("traineeUsername", "manya.whitcomb")
-                        .header("trainerUsername", "betteann.staten")
-                        .header("trainingName", "Mr. Olympia Training")
-                        .header("trainingDuration", 35.2)
-                        .header("trainingTypeId", 1)
-                        .header("trainingDate", "2024-01-10"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(trainingDto)))
                 .andExpect(status().isCreated())
                 .andExpect(content().string(containsString("Training created")));
     }
 
     @Test
-    void whenWrongSpecializationThen400() throws Exception {
-        this.mvc.perform(post("/api/trainings/save")
-                        .header("Authorization", "Bearer " + token)
-                        .header("traineeUsername", "manya.whitcomb")
-                        .header("trainerUsername", "ricardo.patino")
-                        .header("trainingName", "Fake training")
-                        .header("trainingDuration", 1000)
-                        .header("trainingTypeId", 6))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     void whenWrongUsernamesThen400() throws Exception {
+        TrainingDto trainingDto = new TrainingDto("Goat training", "2024-01-10", 50.0, "lionel.messi", "cristiano.ronaldo");
+
         this.mvc.perform(post("/api/trainings/save")
                         .header("Authorization", "Bearer " + token)
-                        .header("traineeUsername", "cristiano.ronaldo")
-                        .header("trainerUsername", "lionel.messi")
-                        .header("trainingName", "Goat training")
-                        .header("trainingDuration", 50)
-                        .header("trainingTypeId", 5)
-                        .header("trainingDate", "2024-01-10"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(trainingDto)))
                 .andExpect(status().isBadRequest());
     }
 }

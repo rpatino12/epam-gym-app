@@ -15,4 +15,15 @@ public class TrainingDto {
     private String trainerUsername;
     @NotBlank
     private String traineeUsername;
+
+    public TrainingDto() {
+    }
+
+    public TrainingDto(String name, String date, Double duration, String trainerUsername, String traineeUsername) {
+        this.name = name;
+        this.date = date;
+        this.duration = duration;
+        this.trainerUsername = trainerUsername;
+        this.traineeUsername = traineeUsername;
+    }
 }

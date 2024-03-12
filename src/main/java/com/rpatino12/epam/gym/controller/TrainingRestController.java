@@ -81,18 +81,12 @@ public class TrainingRestController {
     public ResponseEntity<String> createTraining(@Valid @RequestBody TrainingDto trainingDto){
         log.info("Received POST request to /api/trainings/save");
 
-        Optional<Trainer> trainer = trainerService.getByUsername(trainingDto.getTrainerUsername());
-        long trainingTypeId = trainer.isPresent()?trainer.get().getSpecialization().getTrainingTypeId():1;
-
         Date date = new Date(dateUtils.createDateFromDateString(trainingDto.getDate()).getTime());
-        TrainingType trainingType = new TrainingType();
-        trainingType.setTrainingTypeId(trainingTypeId);
 
         Training training = new Training();
         training.setTrainingName(trainingDto.getName());
         training.setTrainingDate(date);
         training.setTrainingDuration(trainingDto.getDuration());
-        training.setTrainingType(trainingType);
 
         boolean isTrainingSaved = trainingService.save(
                 training,

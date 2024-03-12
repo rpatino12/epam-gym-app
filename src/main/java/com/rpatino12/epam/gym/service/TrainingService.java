@@ -40,6 +40,7 @@ public class TrainingService {
         if (trainee.isPresent() && trainer.isPresent()){
             newTraining.setTrainee(trainee.get());
             newTraining.setTrainer(trainer.get());
+            newTraining.setTrainingType(trainer.get().getSpecialization());
             Training training = trainingRepository.save(newTraining);
             log.info("Creating training: " + training);
             return true;

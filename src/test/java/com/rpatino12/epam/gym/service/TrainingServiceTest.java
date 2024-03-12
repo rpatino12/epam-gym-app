@@ -85,7 +85,6 @@ class TrainingServiceTest {
         training.setTrainingName("Testing training");
         training.setTrainingDuration(45.0);
         training.setTrainingDate(new Date(System.currentTimeMillis()));
-        training.setTrainingType(specialization);
         training.setTrainee(trainee);
         training.setTrainer(trainer);
     }
@@ -177,7 +176,6 @@ class TrainingServiceTest {
             training1.setTrainingName("Testing training " + i);
             training1.setTrainingDuration(15 + Math.random()*45);
             training1.setTrainingDate(new Date(System.currentTimeMillis()));
-            training1.setTrainingType(specialization);
             training1.setTrainee(trainee);
             training1.setTrainer(trainer);
 

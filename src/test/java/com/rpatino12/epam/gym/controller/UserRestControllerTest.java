@@ -1,10 +1,13 @@
 package com.rpatino12.epam.gym.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rpatino12.epam.gym.dto.UserLogin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -22,6 +25,9 @@ class UserRestControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @Autowired
+    private ObjectMapper mapper;
+
     private String token;
 
     @BeforeEach
@@ -36,26 +42,31 @@ class UserRestControllerTest {
 
     @Test
     void login() throws Exception {
+        UserLogin userLogin = new UserLogin("shea.mcfater", "pmilyjaewb");
+
         this.mvc.perform(get("/api/users/login")
                         .header("Authorization", "Bearer " + token)
-                        .header("username", "shea.mcfater")
-                        .header("password", "pmilyjaewb"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(userLogin)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Welcome")));
     }
 
     @Test
     void wrongUsernameOrPasswordThen401() throws Exception {
+        UserLogin userLogin = new UserLogin("manya.whitcomb", "wrong-password");
+        UserLogin userLogin1 = new UserLogin("manya.whitcomb1", "vbxowmkpue");
+
         this.mvc.perform(get("/api/users/login")
                         .header("Authorization", "Bearer " + token)
-                        .header("username", "manya.whitcomb")
-                        .header("password", "wrong-password"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(userLogin)))
                 .andExpect(status().isUnauthorized());
 
         this.mvc.perform(get("/api/users/login")
                         .header("Authorization", "Bearer " + token)
-                        .header("username", "manya.whitcomb1")
-                        .header("password", "vbxowmkpue"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(userLogin1)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string(containsString("Wrong username or password")));
     }

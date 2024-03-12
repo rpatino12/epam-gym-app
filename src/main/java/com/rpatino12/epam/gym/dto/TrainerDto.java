@@ -15,4 +15,23 @@ public class TrainerDto extends UserDto{
     private long specializationId;
     private boolean active;
     private Set<Trainee> traineesList = new HashSet<>();
+
+    public TrainerDto() {
+    }
+
+    public TrainerDto(String firstName, String lastName, boolean active) {
+        super(firstName, lastName);
+        this.active = active;
+    }
+
+    public TrainerDto(String firstName, String lastName, long specializationId) {
+        super(firstName, lastName);
+        this.specializationId = specializationId;
+    }
+
+    public TrainerDto(String username, String firstName, String lastName, long specializationId, boolean active) {
+        super(username, firstName, lastName);
+        this.specializationId = specializationId;
+        this.active = active;
+    }
 }

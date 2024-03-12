@@ -14,4 +14,25 @@ public class TraineeDto extends UserDto{
     private String address;
     private boolean active;
     private Set<Trainer> trainersList = new HashSet<>();
+
+    public TraineeDto() {
+    }
+
+    public TraineeDto(String username, String firstName, String lastName, boolean active) {
+        super(username, firstName, lastName);
+        this.active = active;
+    }
+
+    public TraineeDto(String firstName, String lastName, String birthdate, String address) {
+        super(firstName, lastName);
+        this.birthdate = birthdate;
+        this.address = address;
+    }
+
+    public TraineeDto(String username, String firstName, String lastName, String birthdate, String address, boolean active) {
+        super(username, firstName, lastName);
+        this.birthdate = birthdate;
+        this.address = address;
+        this.active = active;
+    }
 }
