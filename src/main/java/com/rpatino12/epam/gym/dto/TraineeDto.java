@@ -13,7 +13,6 @@ public class TraineeDto extends UserDto{
     private String birthdate;
     private String address;
     private boolean active;
-    private Set<Trainer> trainersList = new HashSet<>();
 
     public TraineeDto() {
     }

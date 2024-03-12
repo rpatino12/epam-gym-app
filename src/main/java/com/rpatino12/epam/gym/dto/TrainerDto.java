@@ -14,7 +14,6 @@ public class TrainerDto extends UserDto{
     @NotNull
     private long specializationId;
     private boolean active;
-    private Set<Trainee> traineesList = new HashSet<>();
 
     public TrainerDto() {
     }
